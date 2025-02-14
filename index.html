@@ -17,6 +17,7 @@
             --on-surface-color: #212121;
             --on-background-color: #212121;
             --error-color: #F44336;
+            --tab-inactive-color: #9E9E9E; /* Inactive tab color */
         }
 
         /* Global Styling */
@@ -40,43 +41,46 @@
             font-weight: 500;
         }
 
+        /* Tab Styling */
         .tabs {
             display: flex;
             justify-content: center;
             margin-top: 20px;
             width: 100%;
             box-sizing: border-box;
+            border-bottom: 2px solid var(--primary-color);
         }
 
         .tab {
             flex: 1;
-            padding: 12px;
+            padding: 16px;
             font-size: 1rem;
             text-align: center;
-            background-color: var(--surface-color);
-            color: var(--on-surface-color);
+            background-color: transparent;
+            color: var(--tab-inactive-color);
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: color 0.3s, transform 0.3s;
+            font-weight: 500;
         }
 
         .tab.active {
-            background-color: var(--primary-color);
-            color: var(--on-primary-color);
-            font-weight: 500;
+            color: var(--primary-color);
+            transform: scale(1.1);
         }
 
         .tab-content {
             display: none;
             width: 100%;
-            margin-top: 10px;
-            transition: opacity 0.3s;
+            margin-top: 20px;
+            padding: 0 16px; /* Adding padding inside the tab content */
+            box-sizing: border-box;
         }
 
         .tab-content.active {
             display: block;
-            opacity: 1;
         }
 
+        /* Card Styling */
         .card {
             background-color: var(--background-color);
             border-radius: 12px;
