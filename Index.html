@@ -3,16 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reddit Aggregator - JohnsonDelbert1</title>
+    <title>Social Aggregator</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@material/tabs/dist/mdc.tabs.min.css">
+    
     <style>
         :root {
-            --primary-color: #1e88e5;
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-color: #ffffff;
+            --primary-color: color-mix(in srgb, var(--system-accent, #1e88e5) 90%, black 10%);
+            --bg-color: color-mix(in srgb, var(--system-background, #121212) 90%, white 10%);
+            --card-bg: color-mix(in srgb, var(--system-surface, #1e1e1e) 90%, white 10%);
+            --text-color: color-mix(in srgb, var(--system-on-background, #ffffff) 90%, black 10%);
             --border-color: #333;
             --shadow: rgba(0, 0, 0, 0.2);
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --primary-color: color-mix(in srgb, #1e88e5 90%, white 10%);
+                --bg-color: #ffffff;
+                --card-bg: #f5f5f5;
+                --text-color: #000000;
+                --border-color: #ddd;
+                --shadow: rgba(0, 0, 0, 0.1);
+            }
         }
 
         body {
@@ -37,6 +50,35 @@
             font-weight: 300;
         }
 
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-color);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .post {
             background: var(--card-bg);
             padding: 20px;
@@ -57,20 +99,15 @@
         .post h3 {
             margin: 0 0 10px;
             font-size: 1.2em;
-            color: #e0e0e0;
+            color: var(--text-color);
             font-weight: bold;
-            transition: color 0.3s ease-in-out;
-            cursor: pointer;
-        }
-
-        .post h3:hover {
-            color: #ffffff;
         }
 
         .post p {
             font-size: 0.95em;
-            color: #bdbdbd;
+            color: var(--text-color);
             line-height: 1.4;
+            cursor: pointer;
         }
 
         .full-text {
@@ -82,7 +119,6 @@
             display: block;
         }
 
-        /* FAB style for Show Less button */
         .fab {
             position: absolute;
             bottom: 20px;
@@ -94,28 +130,48 @@
             font-size: 24px;
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 6px var(--shadow);
             display: none;
         }
 
         .fab:hover {
-            background-color: #1565c0;
+            background-color: color-mix(in srgb, var(--primary-color) 90%, black 10%);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Posts by johnsondelbert1</h1>
-        <div id="feed">Loading...</div>
+        <h1>Social Aggregator</h1>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('reddit')">Reddit</div>
+            <div class="tab" onclick="switchTab('tumblr')">Tumblr</div>
+        </div>
+
+        <div id="reddit" class="tab-content active">
+            <div id="reddit-feed">Loading...</div>
+        </div>
+
+        <div id="tumblr" class="tab-content">
+            <div id="tumblr-feed">Loading...</div>
+        </div>
     </div>
 
     <script>
-        async function fetchRedditUser() {
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tabEl => tabEl.classList.remove('active'));
+            
+            document.getElementById(tab).classList.add('active');
+            document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
+        }
+
+        async function fetchRedditPosts() {
             try {
                 const res = await fetch('https://www.reddit.com/user/johnsondelbert1/submitted.json');
                 const data = await res.json();
-                const feed = document.getElementById('feed');
-                feed.innerHTML = '';  
+                const feed = document.getElementById('reddit-feed');
+                feed.innerHTML = '';
 
                 data.data.children.forEach(post => {
                     let fullText = post.data.selftext;
@@ -125,51 +181,48 @@
                         <h3>${post.data.title}</h3>
                         <p class="short-text">${shortText}</p>
                         <p class="full-text">${fullText}</p>
-                        <button class="fab material-icons" style="display: none;">expand_less</button>
+                        <button class="fab material-icons">expand_less</button>
                     </div>`;
 
                     feed.innerHTML += postHtml;
                 });
 
-                document.querySelectorAll('.post h3').forEach(title => {
-                    title.addEventListener('click', function () {
-                        let post = this.parentElement;
-                        let fullText = post.querySelector('.full-text');
-                        let shortText = post.querySelector('.short-text');
-                        let fabButton = post.querySelector('.fab');
-
-                        if (fullText.style.display === 'none' || fullText.style.display === '') {
-                            fullText.style.display = 'block';
-                            shortText.style.display = 'none';
-                            fabButton.style.display = 'block'; // Show "Show Less" button
-                        } else {
-                            fullText.style.display = 'none';
-                            shortText.style.display = 'block';
-                            fabButton.style.display = 'none'; // Hide "Show Less" button
-                        }
-                    });
-                });
-
-                document.querySelectorAll('.fab').forEach(fab => {
-                    fab.addEventListener('click', function () {
-                        let post = this.parentElement;
-                        let fullText = post.querySelector('.full-text');
-                        let shortText = post.querySelector('.short-text');
-                        let fabButton = post.querySelector('.fab');
-
-                        fullText.style.display = 'none';
-                        shortText.style.display = 'block';
-                        fabButton.style.display = 'none'; // Hide the FAB when collapsed
-                    });
-                });
-
+                addExpandListeners();
             } catch (error) {
-                console.error('Error fetching Reddit data:', error);
-                document.getElementById('feed').innerHTML = '<p>Failed to load posts.</p>';
+                document.getElementById('reddit-feed').innerHTML = '<p>Failed to load posts.</p>';
             }
         }
 
-        fetchRedditUser();
+        async function fetchTumblrPosts() {
+            try {
+                const tumblrBlog = 'exampleblog.tumblr.com'; // Replace with your Tumblr blog
+                const res = await fetch(`https://api.tumblr.com/v2/blog/${tumblrBlog}/posts?api_key=YOUR_TUMBLR_API_KEY`);
+                const data = await res.json();
+                const feed = document.getElementById('tumblr-feed');
+                feed.innerHTML = '';
+
+                data.response.posts.forEach(post => {
+                    let fullText = post.summary || "No text available.";
+                    let shortText = fullText.length > 150 ? fullText.substring(0, 150) + "..." : fullText;
+
+                    let postHtml = `<div class="post">
+                        <h3>${post.title || "Untitled Post"}</h3>
+                        <p class="short-text">${shortText}</p>
+                        <p class="full-text">${fullText}</p>
+                        <button class="fab material-icons">expand_less</button>
+                    </div>`;
+
+                    feed.innerHTML += postHtml;
+                });
+
+                addExpandListeners();
+            } catch (error) {
+                document.getElementById('tumblr-feed').innerHTML = '<p>Failed to load posts.</p>';
+            }
+        }
+
+        fetchRedditPosts();
+        fetchTumblrPosts();
     </script>
 </body>
 </html>
