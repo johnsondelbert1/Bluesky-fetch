@@ -149,13 +149,43 @@
     </div>
 
     <script>
+        async function fetchRedditPosts() {
+            try {
+                const response = await fetch(`https://www.reddit.com/user/johnsondelbert1/submitted.json`);
+                const data = await response.json();
+
+                if (!data || !data.data || !data.data.children) {
+                    throw new Error("Invalid Reddit API response");
+                }
+
+                document.getElementById("reddit-error").style.display = 'none';
+                displayRedditPosts(data.data.children);
+            } catch (error) {
+                document.getElementById("reddit-error").textContent = `Reddit Error: ${error.message}`;
+            }
+        }
+
+        function displayRedditPosts(posts) {
+            const container = document.getElementById("reddit-posts");
+            container.innerHTML = '';
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('card');
+                postElement.innerHTML = `
+                    <div class="card-header"><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></div>
+                    <div class="card-body">${post.data.selftext || "No content available"}</div>
+                `;
+                container.appendChild(postElement);
+            });
+        }
+
         async function fetchTumblrPosts() {
             try {
                 const response = await fetch(`https://api.tumblr.com/v2/blog/shelbeezz.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN`);
                 const data = await response.json();
 
                 if (!data.response || !data.response.posts) {
-                    throw new Error("Invalid API response");
+                    throw new Error("Invalid Tumblr API response");
                 }
 
                 document.getElementById("tumblr-error").style.display = 'none';
@@ -163,20 +193,6 @@
             } catch (error) {
                 document.getElementById("tumblr-error").textContent = `Tumblr Error: ${error.message}`;
             }
-        }
-
-        function displayTumblrPosts(posts) {
-            const container = document.getElementById("tumblr-posts");
-            container.innerHTML = '';
-            posts.forEach(post => {
-                const postElement = document.createElement('div');
-                postElement.classList.add('card');
-                postElement.innerHTML = `
-                    <div class="card-header">${post.summary || "Untitled Post"}</div>
-                    <div class="card-body">${post.body || "No content available"}</div>
-                `;
-                container.appendChild(postElement);
-            });
         }
 
         function switchTab(tab) {
@@ -189,8 +205,10 @@
         document.getElementById("reddit-tab").addEventListener("click", () => switchTab("reddit"));
         document.getElementById("tumblr-tab").addEventListener("click", () => switchTab("tumblr"));
 
+        document.getElementById("refresh-reddit").addEventListener("click", fetchRedditPosts);
         document.getElementById("refresh-tumblr").addEventListener("click", fetchTumblrPosts);
 
+        fetchRedditPosts();
         fetchTumblrPosts();
     </script>
 
