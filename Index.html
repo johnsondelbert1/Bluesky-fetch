@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1565c0">
-    <title>Social Aggregator</title>
+    <title>Shelbee's Hub</title>
 
     <!-- PWA Support -->
     <link rel="manifest" href="manifest.json">
@@ -25,7 +25,7 @@
             --text-color: #ffffff;
             --border-color: #333;
             --shadow: rgba(0, 0, 0, 0.2);
-            --link-color: #1565c0;      /* Accent blue for links */
+            --link-color: #1565c0;      /* Accent color for links */
         }
 
         [data-theme="light"] {
@@ -45,12 +45,17 @@
             display: flex;
             justify-content: center;
             transition: background 0.3s, color 0.3s;
+            height: 100vh;
+            flex-direction: column;
         }
 
         .container {
             max-width: 800px;
             width: 90%;
             margin-top: 20px;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
         }
 
         h1 {
@@ -116,6 +121,11 @@
 
         .tab-content {
             display: none;
+            height: calc(100% - 60px); /* Space for header and tabs */
+            overflow-y: auto;
+            position: absolute;
+            width: 100%;
+            padding-top: 20px;
         }
 
         .tab-content.active {
@@ -132,7 +142,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Social Aggregator</h1>
+        <h1>Shelbee's Hub</h1> <!-- Updated title -->
         <div class="tabs">
             <div id="reddit-tab" class="tab active" onclick="switchTab('reddit')">Reddit</div>
             <div id="tumblr-tab" class="tab" onclick="switchTab('tumblr')">Tumblr</div>
@@ -148,6 +158,8 @@
     </div>
 
     <script>
+        let startX, startY, endX, endY;
+
         function switchTab(tab) {
             // Remove active class from all tabs and content
             document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
@@ -157,6 +169,31 @@
             document.getElementById(tab).classList.add("active");
             document.getElementById(tab + "-tab").classList.add("active");
         }
+
+        // Detect swipe gestures
+        document.querySelector(".container").addEventListener("touchstart", function(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+
+        document.querySelector(".container").addEventListener("touchend", function(e) {
+            endX = e.changedTouches[0].clientX;
+            endY = e.changedTouches[0].clientY;
+
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
+
+            // If swipe is horizontal (left or right)
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                if (deltaX > 0) {
+                    // Swipe right: switch to Reddit tab
+                    switchTab('reddit');
+                } else {
+                    // Swipe left: switch to Tumblr tab
+                    switchTab('tumblr');
+                }
+            }
+        });
 
         function fetchRedditPosts() {
             fetch("https://www.reddit.com/user/johnsondelbert1/submitted.json")
