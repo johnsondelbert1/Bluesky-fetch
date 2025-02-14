@@ -108,50 +108,6 @@
             font-weight: 500;
         }
 
-        /* Material design card */
-        .card {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            margin-bottom: 20px;
-            padding: 20px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .card-content {
-            margin-top: 10px;
-        }
-
-        /* Material Design button */
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: white;
-            background-color: #d32f2f;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-
-        .button:hover {
-            background-color: #b71c1c;
-        }
-
         /* Responsive design */
         @media (max-width: 768px) {
             .tabs {
@@ -217,14 +173,10 @@
                 })
                 .then(data => {
                     const posts = data.data.children.map(post => `
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title"><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></h3>
-                            </div>
-                            <div class="card-content">
-                                <p class="post-body collapsed" onclick="togglePost(this)">
-                                    ${post.data.selftext || "No content available"}
-                                </p>
+                        <div class="post">
+                            <h3><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></h3>
+                            <div class="post-body collapsed" onclick="togglePost(this)">
+                                ${post.data.selftext || "No content available"}
                             </div>
                         </div>
                     `).join("");
@@ -258,14 +210,10 @@
                         }
 
                         return `
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">${post.summary}</h3>
-                                </div>
-                                <div class="card-content">
-                                    ${images}
-                                    <p class="post-body">${post.body || "No content available"}</p>
-                                </div>
+                            <div class="post">
+                                <h3>${post.summary}</h3>
+                                ${images}
+                                <p class="post-body">${post.body || "No content available"}</p>
                             </div>
                         `;
                     }).join("");
@@ -283,4 +231,13 @@
                     }
                     document.getElementById("tumblr-feed").innerHTML = "";
                     document.getElementById("tumblr-error").style.display = "block";
-                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts
+                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts: ${errorMessage}`;
+                });
+        }
+
+        // Call the fetch functions to load posts on page load
+        fetchRedditPosts();
+        fetchTumblrPosts();
+    </script>
+</body>
+</html>
