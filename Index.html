@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#b71c1c">
+    <meta name="theme-color" content="#1565c0">
     <title>Social Aggregator</title>
 
     <!-- PWA Support -->
@@ -18,13 +18,13 @@
 
     <style>
         :root {
-            --primary-color: #b71c1c;
-            --accent-color: #1565c0;
+            --primary-color: #1565c0;  /* Accent color */
             --bg-color: #121212;
             --card-bg: #1e1e1e;
             --text-color: #ffffff;
             --border-color: #333;
             --shadow: rgba(0, 0, 0, 0.2);
+            --link-color: #1565c0;  /* Accent color used for links */
         }
 
         [data-theme="light"] {
@@ -54,7 +54,7 @@
 
         h1 {
             text-align: center;
-            color: var(--primary-color);
+            color: var(--primary-color);  /* Accent color used in the header */
         }
 
         .tabs {
@@ -74,8 +74,8 @@
         }
 
         .tab.active {
-            border-bottom: 3px solid var(--accent-color);
-            color: var(--accent-color);
+            border-bottom: 3px solid var(--primary-color);  /* Accent color for active tab */
+            color: var(--primary-color);
         }
 
         .post {
@@ -88,7 +88,7 @@
         }
 
         .post h3 a {
-            color: var(--accent-color);
+            color: var(--link-color);  /* Accent color for post links */
             text-decoration: none;
         }
 
@@ -108,7 +108,7 @@
         }
 
         .error-message {
-            color: red;
+            color: var(--primary-color);  /* Accent color used for error messages */
             font-weight: bold;
             text-align: center;
         }
