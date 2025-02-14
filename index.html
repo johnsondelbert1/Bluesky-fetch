@@ -148,10 +148,10 @@
     </div>
 
     <!-- Post Content -->
-    <div class="tab-content active-tab">
+    <div class="tab-content active-tab" id="reddit-tab">
       <div class="posts-container" id="reddit-posts"></div>
     </div>
-    <div class="tab-content">
+    <div class="tab-content" id="tumblr-tab">
       <div class="posts-container" id="tumblr-posts"></div>
     </div>
     <div class="error" id="reddit-error"></div>
@@ -280,7 +280,7 @@
       // Add active class to the clicked tab
       document.querySelector(`[data-tab=${tab}]`).classList.add('active');
       // Show the relevant content
-      document.querySelector(`#${tab}-posts`).classList.add('active-tab');
+      document.getElementById(`${tab}-tab`).classList.add('active-tab');
     }
 
     // Refresh posts
@@ -295,4 +295,4 @@
   </script>
 
 </body>
-</html
+</html>
