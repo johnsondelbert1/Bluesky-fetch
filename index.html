@@ -61,14 +61,9 @@
             font-size: 18px;
             font-weight: 500;
             color: var(--accent-color);
-            cursor: pointer;
         }
         .post-body {
-            display: none;
             margin-top: 10px;
-        }
-        .post-body.expanded {
-            display: block;
         }
         button {
             background: var(--accent-color);
@@ -117,11 +112,6 @@
             });
         });
 
-        function togglePostBody(event) {
-            let body = event.currentTarget.nextElementSibling;
-            body.classList.toggle("expanded");
-        }
-
         async function fetchRedditPosts(force = false) {
             let cachedData = localStorage.getItem("redditCache");
             let lastFetch = localStorage.getItem("redditLastFetch");
@@ -154,7 +144,6 @@
                 div.classList.add("card");
                 div.innerHTML = `<div class="post-title">${post.data.title}</div>
                                  <div class="post-body">${post.data.selftext || "No text available"}</div>`;
-                div.querySelector(".post-title").addEventListener("click", togglePostBody);
                 container.appendChild(div);
             });
         }
@@ -194,7 +183,6 @@
                 div.classList.add("card");
                 div.innerHTML = `<div class="post-title">${post.summary}</div>
                                  <div class="post-body">${post.body || "No text available"}</div>`;
-                div.querySelector(".post-title").addEventListener("click", togglePostBody);
                 container.appendChild(div);
             });
         }
