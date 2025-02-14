@@ -67,6 +67,11 @@
             color: #ddd;
         }
 
+        .subreddit {
+            font-size: 0.9em;
+            color: #b0b0b0;
+        }
+
         .btn {
             background-color: #6200ea;
             color: white;
@@ -210,11 +215,23 @@
                     title.classList.add('card-header');
                     title.innerHTML = `<a href="${post.url}" target="_blank">${post.title}</a>`;
 
+                    const subreddit = document.createElement('p');
+                    subreddit.classList.add('subreddit');
+                    subreddit.innerHTML = `Subreddit: /r/${post.subreddit}`;
+
                     const body = document.createElement('div');
                     body.classList.add('card-body');
                     body.innerHTML = post.selftext || "No description";
 
+                    // Check if the Reddit post has an image
+                    if (post.preview && post.preview.images && post.preview.images[0].source) {
+                        const img = document.createElement('img');
+                        img.src = post.preview.images[0].source.url;
+                        card.appendChild(img);
+                    }
+
                     card.appendChild(title);
+                    card.appendChild(subreddit);
                     card.appendChild(body);
                 } else if (platform === 'tumblr') {
                     // Tumblr Post
