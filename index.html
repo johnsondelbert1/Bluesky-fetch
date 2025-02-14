@@ -68,24 +68,24 @@
         .tab-content {
             display: none;
             width: 100%;
-            padding: 20px;
-            background-color: var(--background-color);
-            border-radius: 8px;
             margin-top: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s;
         }
 
         .tab-content.active {
             display: block;
+            opacity: 1;
         }
 
         .card {
             background-color: var(--background-color);
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin-bottom: 16px;
             padding: 16px;
             transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
         }
 
         .card:hover {
@@ -103,6 +103,12 @@
             font-size: 1rem;
             color: var(--on-surface-color);
             line-height: 1.6;
+        }
+
+        .card img {
+            border-radius: 8px;
+            margin-top: 10px;
+            max-width: 100%;
         }
 
         .button {
@@ -219,7 +225,7 @@
                         let images = "";
                         if (post.photos) {
                             images = post.photos.map(photo => `
-                                <img src="${photo.alt_sizes[0].url}" alt="Image from Tumblr post" style="width: 100%; border-radius: 4px;">
+                                <img src="${photo.alt_sizes[0].url}" alt="Image from Tumblr post">
                             `).join("");
                         }
 
