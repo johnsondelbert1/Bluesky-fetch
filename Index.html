@@ -121,6 +121,13 @@
         .tab-content.active {
             display: block;
         }
+
+        .post img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -196,12 +203,23 @@
                     return response.json();
                 })
                 .then(data => {
-                    const posts = data.response.posts.map(post => `
-                        <div class="post">
-                            <h3>${post.summary}</h3>
-                            <p>${post.body || "No content available"}</p>
-                        </div>
-                    `).join("");
+                    const posts = data.response.posts.map(post => {
+                        let images = "";
+                        if (post.photos) {
+                            images = post.photos.map(photo => `
+                                <img src="${photo.alt_sizes[0].url}" alt="Image from Tumblr post">
+                            `).join("");
+                        }
+
+                        return `
+                            <div class="post">
+                                <h3>${post.summary}</h3>
+                                ${images}
+                                <p>${post.body || "No content available"}</p>
+                            </div>
+                        `;
+                    }).join("");
+
                     document.getElementById("tumblr-feed").innerHTML = posts;
                     document.getElementById("tumblr-error").style.display = "none";
                 })
