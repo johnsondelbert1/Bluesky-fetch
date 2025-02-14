@@ -1,295 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#6a1b9a">
-    <title>Shelbee's Hub</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <style>
-        /* Base Styles */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #121212;
-            color: white;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Shelbee's Hub</title>
 
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
+  <style>
+    /* Material Design Styling */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      margin: 0;
+    }
 
-        .tab {
-            background-color: #6a1b9a;
-            color: white;
-            padding: 10px 20px;
-            cursor: pointer;
-            border: none;
-            text-align: center;
-            border-radius: 5px;
-            margin: 0 10px;
-            transition: background-color 0.3s;
-        }
+    header {
+      background-color: #6200ea;
+      padding: 1rem;
+      color: white;
+      text-align: center;
+    }
 
-        .tab:hover {
-            background-color: #9c4dcc;
-        }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      background-color: #3700b3;
+      margin: 0;
+      padding: 10px;
+    }
 
-        .tab-content {
-            display: none;
-            width: 100%;
-            margin-top: 20px;
-        }
+    .tab {
+      margin: 0 15px;
+      padding: 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
 
-        .tab-content.active {
-            display: block;
-        }
+    .tab:hover {
+      background-color: #bb86fc;
+    }
 
-        .card {
-            background-color: #2c2c2c;
-            border-radius: 8px;
-            margin: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 500px;
-        }
+    .tab-content {
+      display: none;
+      padding: 20px;
+    }
 
-        .card-header {
-            font-size: 1.2em;
-            color: #fff;
-            margin-bottom: 10px;
-        }
+    .active {
+      display: block;
+    }
 
-        .card-body {
-            color: #bbb;
-            font-size: 0.9em;
-        }
+    .card {
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 10px 0;
+    }
 
-        .card img {
-            width: 100%;
-            border-radius: 8px;
-            object-fit: cover;
-            height: 200px;
-        }
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+    }
 
-        footer {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #6a1b9a;
-            width: 100%;
-            text-align: center;
-        }
+    .card a {
+      color: #bb86fc;
+      text-decoration: none;
+    }
 
-        footer button {
-            background-color: #9c4dcc;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+    .card-header {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
 
-        footer button:hover {
-            background-color: #7b1fa2;
-        }
+    .card-body {
+      font-size: 1em;
+      margin-bottom: 10px;
+    }
 
-        @media (max-width: 768px) {
-            .card {
-                width: 90%;
-            }
+    footer {
+      text-align: center;
+      padding: 10px;
+      background-color: #6200ea;
+      color: white;
+    }
 
-            .tabs {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
+    .button {
+      background-color: #03dac5;
+      padding: 10px 20px;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-    </style>
+    .button:hover {
+      background-color: #018786;
+    }
+
+  </style>
 </head>
+
 <body>
+  <header>
+    <h1>Shelbee's Hub</h1>
+  </header>
 
-<div class="container">
-    <div class="tabs">
-        <button class="tab" onclick="switchTab('reddit')">Reddit</button>
-        <button class="tab" onclick="switchTab('tumblr')">Tumblr</button>
-    </div>
+  <div class="tabs">
+    <div class="tab" onclick="showTab('reddit')">Reddit</div>
+    <div class="tab" onclick="showTab('tumblr')">Tumblr</div>
+  </div>
 
-    <div id="reddit" class="tab-content">
-        <div id="redditPosts"></div>
-        <p id="redditError" style="color: red; display: none;">Failed to load Reddit posts.</p>
-    </div>
+  <div id="reddit" class="tab-content active">
+    <h2>Reddit Posts</h2>
+    <div id="reddit-posts"></div>
+    <button class="button" onclick="fetchRedditData()">Refresh Reddit Posts</button>
+    <div id="reddit-error" style="color: red;"></div>
+  </div>
 
-    <div id="tumblr" class="tab-content">
-        <div id="tumblrPosts"></div>
-        <p id="tumblrError" style="color: red; display: none;">Failed to load Tumblr posts.</p>
-    </div>
+  <div id="tumblr" class="tab-content">
+    <h2>Tumblr Posts</h2>
+    <div id="tumblr-posts"></div>
+    <button class="button" onclick="fetchTumblrData()">Refresh Tumblr Posts</button>
+    <div id="tumblr-error" style="color: red;"></div>
+  </div>
 
-    <footer>
-        <button onclick="refreshPosts()">Refresh Posts</button>
-    </footer>
-</div>
+  <footer>
+    <p>Built with ❤️ by Shelbee</p>
+  </footer>
 
-<script>
-    const redditUser = 'johnsondelbert1'; // Specify the Reddit username
-    const tumblrBlog = 'shelbeezz'; // Specify the Tumblr blog
+  <script>
+    const redditUsername = 'johnsondelbert1';
+    const tumblrBlog = 'shelbeezz';
+    const redditApiUrl = `https://www.reddit.com/user/${redditUsername}/submitted.json`;
+    const tumblrApiUrl = `https://api.tumblr.com/v2/blog/${tumblrBlog}.tumblr.com/posts/text?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN`;
 
-    async function fetchRedditPosts() {
-        const cachedData = localStorage.getItem('redditPosts');
-        const cacheTimestamp = localStorage.getItem('redditCacheTimestamp');
-        const now = Date.now();
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.remove('active'));
 
-        // If there is cached data and it is less than 24 hours old, use the cached data
-        if (cachedData && now - cacheTimestamp < 24 * 60 * 60 * 1000) {
-            displayPosts('reddit', JSON.parse(cachedData));
-            return;
-        }
-
-        const url = `https://www.reddit.com/user/${redditUser}/submitted.json?limit=10`;
-
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-
-            if (data.data && data.data.children) {
-                const posts = data.data.children.map(post => post.data);
-
-                // Cache the posts and timestamp
-                localStorage.setItem('redditPosts', JSON.stringify(posts));
-                localStorage.setItem('redditCacheTimestamp', now.toString());
-
-                displayPosts('reddit', posts); // Display the posts in the UI
-            } else {
-                document.getElementById('redditError').style.display = 'block';
-            }
-        } catch (error) {
-            console.error('Error fetching Reddit posts:', error);
-            document.getElementById('redditError').style.display = 'block';
-        }
+      const activeTab = document.getElementById(tabId);
+      activeTab.classList.add('active');
     }
 
-    async function fetchTumblrPosts() {
-        const cachedData = localStorage.getItem('tumblrPosts');
-        const cacheTimestamp = localStorage.getItem('tumblrCacheTimestamp');
-        const now = Date.now();
+    async function fetchRedditData() {
+      const redditPosts = document.getElementById('reddit-posts');
+      const redditError = document.getElementById('reddit-error');
+      redditError.textContent = '';  // Clear any previous error
 
-        // If there is cached data and it is less than 24 hours old, use the cached data
-        if (cachedData && now - cacheTimestamp < 24 * 60 * 60 * 1000) {
-            displayPosts('tumblr', JSON.parse(cachedData));
-            return;
-        }
+      try {
+        const response = await fetch(redditApiUrl);
+        const data = await response.json();
+        const posts = data.data.children;
 
-        const url = `https://api.tumblr.com/v2/blog/${tumblrBlog}.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN`;
-
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-
-            if (data.response && data.response.posts) {
-                const posts = data.response.posts;
-
-                // Cache the posts and timestamp
-                localStorage.setItem('tumblrPosts', JSON.stringify(posts));
-                localStorage.setItem('tumblrCacheTimestamp', now.toString());
-
-                displayPosts('tumblr', posts); // Display the posts in the UI
-            } else {
-                document.getElementById('tumblrError').style.display = 'block';
-            }
-        } catch (error) {
-            console.error('Error fetching Tumblr posts:', error);
-            document.getElementById('tumblrError').style.display = 'block';
-        }
-    }
-
-    function displayPosts(platform, posts) {
-        let postContainer = platform === 'reddit' ? document.getElementById('redditPosts') : document.getElementById('tumblrPosts');
-        postContainer.innerHTML = ''; // Clear previous posts
+        redditPosts.innerHTML = '';  // Clear previous posts
 
         posts.forEach(post => {
-            let card = document.createElement('div');
-            card.classList.add('card');
+          const card = document.createElement('div');
+          card.className = 'card';
 
-            if (platform === 'reddit') {
-                // Reddit Post
-                const title = document.createElement('h3');
-                title.classList.add('card-header');
-                title.innerHTML = `<a href="${post.url}" target="_blank">${post.title}</a>`;
+          const postTitle = post.data.title;
+          const postLink = post.data.url;
+          const postSubreddit = post.data.subreddit;
 
-                const subreddit = document.createElement('p');
-                subreddit.classList.add('subreddit');
-                subreddit.innerHTML = `Subreddit: /r/${post.subreddit}`;
+          card.innerHTML = `
+            <div class="card-header">${postTitle}</div>
+            <div class="card-body">Subreddit: r/${postSubreddit}</div>
+            <a href="${postLink}" target="_blank">Read more</a>
+          `;
 
-                const body = document.createElement('div');
-                body.classList.add('card-body');
-                body.innerHTML = post.selftext || "No description";
-
-                // Check if the Reddit post has an image
-                if (post.preview && post.preview.images && post.preview.images[0].source) {
-                    const img = document.createElement('img');
-                    img.src = post.preview.images[0].source.url;
-                    card.appendChild(img);
-                }
-
-                card.appendChild(title);
-                card.appendChild(subreddit);
-                card.appendChild(body);
-            } else if (platform === 'tumblr') {
-                // Tumblr Post
-                const title = document.createElement('h3');
-                title.classList.add('card-header');
-                title.innerHTML = post.summary || "No title";
-
-                const body = document.createElement('div');
-                body.classList.add('card-body');
-
-                // Check if it's a photo post
-                if (post.photos) {
-                    post.photos.forEach(photo => {
-                        const img = document.createElement('img');
-                        img.src = photo.original_size.url;
-                        img.style.height = '200px';
-                        img.style.objectFit = 'cover';
-                        body.appendChild(img);
-                    });
-                } else {
-                    body.innerHTML += post.body || "No description";
-                }
-
-                card.appendChild(title);
-                card.appendChild(body);
-            }
-
-            postContainer.appendChild(card);
+          redditPosts.appendChild(card);
         });
+      } catch (error) {
+        redditError.textContent = 'Failed to load Reddit posts. Please try again later.';
+      }
     }
 
-    function switchTab(tabName) {
-        const tabs = document.querySelectorAll('.tab-content');
-        tabs.forEach(tab => tab.classList.remove('active'));
+    async function fetchTumblrData() {
+      const tumblrPosts = document.getElementById('tumblr-posts');
+      const tumblrError = document.getElementById('tumblr-error');
+      tumblrError.textContent = '';  // Clear any previous error
 
-        document.getElementById(tabName).classList.add('active');
+      try {
+        const response = await fetch(tumblrApiUrl);
+        const data = await response.json();
+        const posts = data.response.posts;
+
+        tumblrPosts.innerHTML = '';  // Clear previous posts
+
+        posts.forEach(post => {
+          const card = document.createElement('div');
+          card.className = 'card';
+
+          const postTitle = post.title || 'Untitled';
+          const postBody = post.body || '';
+          const postLink = post.post_url;
+          const postImage = post.photos ? post.photos[0].alt_sizes[0].url : null;
+
+          let postContent = `
+            <div class="card-header">${postTitle}</div>
+            <div class="card-body">${postBody}</div>
+            <a href="${postLink}" target="_blank">Read more</a>
+          `;
+
+          if (postImage) {
+            postContent = `
+              <img src="${postImage}" alt="Post image" />
+              ${postContent}
+            `;
+          }
+
+          card.innerHTML = postContent;
+          tumblrPosts.appendChild(card);
+        });
+      } catch (error) {
+        tumblrError.textContent = 'Failed to load Tumblr posts. Please try again later.';
+      }
     }
 
-    function refreshPosts() {
-        fetchRedditPosts();
-        fetchTumblrPosts();
-    }
-
-    // Initialize by fetching posts for both platforms
-    fetchRedditPosts();
-    fetchTumblrPosts();
-</script>
-
+    // Initial data load
+    fetchRedditData();
+    fetchTumblrData();
+  </script>
 </body>
 </html>
