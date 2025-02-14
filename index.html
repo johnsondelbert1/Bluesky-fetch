@@ -143,19 +143,6 @@
             color: var(--mdc-on-surface-color-dark);
         }
 
-        /* Image Styling */
-        .card img {
-            max-width: 100%;
-            max-height: 300px;
-            object-fit: cover; /* Makes the image fill the space while maintaining its aspect ratio */
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        body.dark-theme .card img {
-            border-radius: 8px;
-        }
-
         /* Button Styling */
         .btn {
             background-color: var(--mdc-accent-color-light);
@@ -290,3 +277,20 @@
             const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (systemPrefersDark) {
                 document.body.classList.add("dark-theme");
+            }
+        }
+
+        // Apply saved theme preference
+        window.onload = function() {
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "dark") {
+                document.body.classList.add("dark-theme");
+            } else if (savedTheme === "light") {
+                document.body.classList.remove("dark-theme");
+            } else {
+                applySystemTheme();
+            }
+        };
+    </script>
+</body>
+</html>
