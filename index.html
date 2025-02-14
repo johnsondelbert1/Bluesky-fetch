@@ -120,6 +120,26 @@
     .tab-content {
       overflow-y: auto;
     }
+
+    /* Grid layout for multiple columns */
+    .posts-container {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 20px;
+    }
+
+    @media (min-width: 600px) {
+      .posts-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .posts-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
   </style>
 </head>
 
@@ -133,8 +153,12 @@
     </div>
 
     <!-- Post Content -->
-    <div class="tab-content active-tab" id="reddit-posts"></div>
-    <div class="tab-content" id="tumblr-posts"></div>
+    <div class="tab-content active-tab">
+      <div class="posts-container" id="reddit-posts"></div>
+    </div>
+    <div class="tab-content">
+      <div class="posts-container" id="tumblr-posts"></div>
+    </div>
     <div class="error" id="reddit-error"></div>
     <div class="error" id="tumblr-error"></div>
   </div>
