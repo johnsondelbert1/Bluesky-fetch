@@ -7,33 +7,24 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Material Design 3 Color Palette */
+        /* Material Design Colors */
         :root {
-            --mdc-primary-color-light: #d32f2f; /* Red */
-            --mdc-accent-color-light: #f9a825; /* Amber */
-            --mdc-background-color-light: #fafafa; /* Light Gray */
-            --mdc-surface-color-light: #ffffff; /* White */
-            --mdc-on-primary-color-light: #ffffff; /* White */
-            --mdc-on-surface-color-light: #000000; /* Black */
-            --mdc-error-color-light: #d32f2f;
-
-            /* Dark Mode Colors */
-            --mdc-primary-color-dark: #bb2124; /* Darker Red */
-            --mdc-accent-color-dark: #ffca28; /* Lighter Amber */
-            --mdc-background-color-dark: #121212; /* Dark Gray */
-            --mdc-surface-color-dark: #1e1e1e; /* Dark Surface */
-            --mdc-on-primary-color-dark: #ffffff; /* White */
-            --mdc-on-surface-color-dark: #e0e0e0; /* Light Gray */
-            --mdc-error-color-dark: #ff5c5c;
+            --primary-color: #d32f2f; /* Red */
+            --accent-color: #f9a825; /* Amber */
+            --background-color: #fafafa; /* Light Gray */
+            --surface-color: #ffffff; /* White */
+            --on-primary-color: #ffffff; /* White */
+            --on-surface-color: #000000; /* Black */
+            --error-color: #d32f2f;
         }
 
-        /* Default to Light Theme */
+        /* Global Styles */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--mdc-background-color-light);
-            color: var(--mdc-on-surface-color-light);
+            background-color: var(--background-color);
+            color: var(--on-surface-color);
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -46,13 +37,7 @@
         h1 {
             font-size: 2.5rem;
             text-align: center;
-            color: var(--mdc-primary-color-light);
-        }
-
-        /* Dark Theme Styles */
-        body.dark-theme {
-            background-color: var(--mdc-background-color-dark);
-            color: var(--mdc-on-surface-color-dark);
+            color: var(--primary-color);
         }
 
         /* Tab Styling */
@@ -66,38 +51,24 @@
             padding: 16px;
             cursor: pointer;
             border-radius: 8px 8px 0 0;
-            background-color: var(--mdc-surface-color-light);
-            color: var(--mdc-on-surface-color-light);
+            background-color: var(--surface-color);
+            color: var(--on-surface-color);
             font-weight: 500;
             transition: background-color 0.3s ease;
         }
 
-        body.dark-theme .tab {
-            background-color: var(--mdc-surface-color-dark);
-            color: var(--mdc-on-surface-color-dark);
-        }
-
         .tab.active {
-            background-color: var(--mdc-primary-color-light);
-            color: var(--mdc-on-primary-color-light);
-        }
-
-        body.dark-theme .tab.active {
-            background-color: var(--mdc-primary-color-dark);
-            color: var(--mdc-on-primary-color-dark);
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
         }
 
         /* Content Section Styling */
         .tab-content {
             display: none;
             padding: 20px;
-            background-color: var(--mdc-surface-color-light);
+            background-color: var(--surface-color);
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        body.dark-theme .tab-content {
-            background-color: var(--mdc-surface-color-dark);
         }
 
         .tab-content.active {
@@ -106,7 +77,7 @@
 
         /* Card Styling for Posts */
         .card {
-            background-color: var(--mdc-surface-color-light);
+            background-color: var(--surface-color);
             padding: 16px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -116,37 +87,25 @@
             flex-direction: column;
         }
 
-        body.dark-theme .card {
-            background-color: var(--mdc-surface-color-dark);
-        }
-
         .card:hover {
             transform: scale(1.02);
         }
 
         .card h3 {
             font-size: 1.5rem;
-            color: var(--mdc-primary-color-light);
+            color: var(--primary-color);
             margin: 0;
         }
 
-        body.dark-theme .card h3 {
-            color: var(--mdc-primary-color-dark);
-        }
-
         .card p {
-            color: var(--mdc-on-surface-color-light);
+            color: var(--on-surface-color);
             margin-top: 10px;
-        }
-
-        body.dark-theme .card p {
-            color: var(--mdc-on-surface-color-dark);
         }
 
         /* Button Styling */
         .btn {
-            background-color: var(--mdc-accent-color-light);
-            color: var(--mdc-on-primary-color-light);
+            background-color: var(--accent-color);
+            color: var(--on-primary-color);
             padding: 10px 16px;
             font-size: 1rem;
             border-radius: 8px;
@@ -155,48 +114,17 @@
             border: none;
         }
 
-        body.dark-theme .btn {
-            background-color: var(--mdc-accent-color-dark);
-        }
-
         .btn:hover {
             background-color: #f57f17; /* Darker amber */
         }
 
-        body.dark-theme .btn:hover {
-            background-color: #ffb300; /* Lighter amber */
-        }
-
         /* Error Message Styling */
         .error {
-            color: var(--mdc-error-color-light);
+            color: var(--error-color);
             font-size: 1.2rem;
             font-weight: 500;
             text-align: center;
             margin-top: 20px;
-        }
-
-        body.dark-theme .error {
-            color: var(--mdc-error-color-dark);
-        }
-
-        /* Switch Theme Button */
-        .theme-switch {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: var(--mdc-primary-color-light);
-            color: var(--mdc-on-primary-color-light);
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.5rem;
-            transition: background-color 0.3s ease;
-        }
-
-        body.dark-theme .theme-switch {
-            background-color: var(--mdc-primary-color-dark);
-            color: var(--mdc-on-primary-color-dark);
         }
 
         /* Responsive Design */
@@ -243,9 +171,6 @@
             <div id="tumblr-feed"></div>
             <div id="tumblr-error" class="error" style="display: none;"></div>
         </div>
-
-        <!-- Theme Switch Button -->
-        <div class="theme-switch" onclick="toggleTheme()">🌙</div>
     </div>
 
     <script>
@@ -261,37 +186,6 @@
             document.getElementById(tab).classList.add("active");
             document.getElementById(tab + "-tab").classList.add("active");
         }
-
-        // Toggle between light and dark theme
-        function toggleTheme() {
-            const body = document.body;
-            body.classList.toggle("dark-theme");
-            const icon = body.classList.contains("dark-theme") ? "🌞" : "🌙";
-            document.querySelector(".theme-switch").textContent = icon;
-            localStorage.setItem("theme", body.classList.contains("dark-theme") ? "dark" : "light");
-        }
-
-        // Check system preference for color scheme and apply it
-        function applySystemTheme() {
-            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (systemPrefersDark) {
-                document.body.classList.add("dark-theme");
-            }
-        }
-
-        // Apply saved theme preference
-        window.onload = function() {
-            const savedTheme = localStorage.getItem("theme");
-            if (savedTheme === "dark") {
-                document.body.classList.add("dark-theme");
-            } else if (savedTheme === "light") {
-                document.body.classList.remove("dark-theme");
-            } else {
-                applySystemTheme();
-            }
-            loadRedditPosts();
-            loadTumblrPosts();
-        };
 
         // Fetch and display Reddit posts
         function loadRedditPosts() {
@@ -345,6 +239,12 @@
                     errorMessage.textContent = "Failed to load Tumblr posts. Please try again later.";
                 });
         }
+
+        // Load posts when the page loads
+        window.onload = function() {
+            loadRedditPosts();
+            loadTumblrPosts();
+        };
     </script>
 </body>
 </html>
