@@ -143,7 +143,7 @@
             position: absolute;
             width: 100%;
             padding-top: 20px;
-            transition: transform 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out; /* Add transition here */
         }
 
         .tab-content.active {
@@ -309,23 +309,4 @@
                         errorMessage = `Tumblr blog "${blogName}" not found. Please check the blog name.`;
                     } else if (error.message.includes("403")) {
                         errorMessage = "Tumblr API access forbidden. Please check your API permissions.";
-                    } else if (error.message.includes("500")) {
-                        errorMessage = "Tumblr server error. Please try again later.";
                     }
-                    document.getElementById("tumblr-feed").innerHTML = "";
-                    document.getElementById("tumblr-error").style.display = "block";
-                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts for blog "${blogName}": ${errorMessage}`;
-                });
-        }
-
-        function togglePost(element) {
-            element.classList.toggle("collapsed");
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            fetchRedditPosts();
-            fetchTumblrPosts();
-        });
-    </script>
-</body>
-</html>
