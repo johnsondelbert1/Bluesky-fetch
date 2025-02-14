@@ -221,7 +221,6 @@
                 padding: 14px;
             }
         }
-
     </style>
 </head>
 <body>
@@ -304,4 +303,43 @@
                         const postElement = document.createElement("div");
                         postElement.classList.add("card");
                         postElement.innerHTML = `
-                            <h
+                            <h3><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></h3>
+                            <p>${post.data.selftext || "No description available."}</p>
+                        `;
+                        postsContainer.appendChild(postElement);
+                    });
+                })
+                .catch(error => {
+                    const errorMessage = document.getElementById("reddit-error");
+                    errorMessage.style.display = "block";
+                    errorMessage.textContent = "Failed to load Reddit posts. Please try again later.";
+                });
+        }
+
+        // Fetch and display Tumblr posts
+        function loadTumblrPosts() {
+            const blogName = "shelbeezz"; // Change this to your Tumblr blog name
+            fetch(`https://api.tumblr.com/v2/blog/${blogName}/posts/text?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN`)
+                .then(response => response.json())
+                .then(data => {
+                    const postsContainer = document.getElementById("tumblr-feed");
+                    if (data.response.posts && data.response.posts.length > 0) {
+                        data.response.posts.forEach(post => {
+                            const postElement = document.createElement("div");
+                            postElement.classList.add("card");
+                            postElement.innerHTML = `
+                                <h3>${post.title || "No title available"}</h3>
+                                <p>${post.body || "No content available."}</p>
+                            `;
+                            postsContainer.appendChild(postElement);
+                        });
+                    } else {
+                        const errorMessage = document.getElementById("tumblr-error");
+                        errorMessage.style.display = "block";
+                        errorMessage.textContent = `No posts found for ${blogName}.`;
+                    }
+                })
+                .catch(error => {
+                    const errorMessage = document.getElementById("tumblr-error");
+                    errorMessage.style.display = "block";
+                    errorMessage.textContent =
