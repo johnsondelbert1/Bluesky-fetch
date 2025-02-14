@@ -166,11 +166,22 @@
 
         async function fetchTumblrPosts() {
             try {
-                const tumblrBlog = 'shelbeezz.tumblr.com'; // Updated Tumblr blog name
+                const tumblrBlog = 'shelbeezz.tumblr.com'; // Tumblr blog name
                 const apiKey = 'ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN'; // Your Tumblr API key
                 const res = await fetch(`https://api.tumblr.com/v2/blog/${tumblrBlog}/posts?api_key=${apiKey}`);
-                
+
+                // Check if the response is valid (status code 200)
+                if (!res.ok) {
+                    throw new Error(`Failed to fetch posts: ${res.status} - ${res.statusText}`);
+                }
+
                 const data = await res.json();
+
+                // If there's an error in the response itself (invalid blog or API issue)
+                if (data.meta.status !== 200) {
+                    throw new Error(`Error from Tumblr API: ${data.meta.msg}`);
+                }
+
                 const feed = document.getElementById('tumblr-feed');
                 feed.innerHTML = '';
 
@@ -193,7 +204,9 @@
                     feed.innerHTML += postHtml;
                 });
             } catch (error) {
-                document.getElementById('tumblr-feed').innerHTML = '<p>Failed to load Tumblr posts.</p>';
+                const feed = document.getElementById('tumblr-feed');
+                feed.innerHTML = `<p>Failed to load Tumblr posts. Error: ${error.message}</p>`;
+                console.error(error); // Logs the error in the console for debugging
             }
         }
 
