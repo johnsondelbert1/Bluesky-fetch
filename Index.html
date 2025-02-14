@@ -47,63 +47,54 @@
             transition: background 0.3s, color 0.3s;
             height: 100vh;
             flex-direction: column;
-            box-sizing: border-box;
         }
 
         .container {
-            width: 100%;
             max-width: 800px;
-            padding: 0 16px;
-            box-sizing: border-box;
-            margin-top: 20px; /* Reduced margin for better spacing */
+            width: 90%;
+            margin-top: 20px;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
         }
 
         h1 {
             text-align: center;
-            color: var(--primary-red);
-            margin-bottom: 16px;
-            font-size: 24px;
+            color: var(--primary-red);  /* Accessible red used in the header */
         }
 
         .tabs {
             display: flex;
             justify-content: space-around;
             border-bottom: 2px solid var(--border-color);
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .tab {
-            padding: 12px 24px;
+            padding: 10px 20px;
             cursor: pointer;
             font-weight: bold;
             color: var(--text-color);
             border-bottom: 3px solid transparent;
             transition: all 0.3s;
-            font-size: 16px;
         }
 
         .tab.active {
-            border-bottom: 3px solid var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);  /* Accent color for active tab */
             color: var(--primary-color);
         }
 
-        /* Adjust the post cards size */
         .post {
             background: var(--card-bg);
-            padding: 16px;
-            margin: 8px 0;
-            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+            border-radius: 10px;
             box-shadow: 0 4px 6px var(--shadow);
             border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            max-width: 100%; /* Ensures it doesn't overflow the container */
-            width: 100%;
-            height: auto;
-            box-sizing: border-box;
         }
 
         .post h3 a {
-            color: var(--link-color);
+            color: var(--link-color);  /* Accent color for post links */
             text-decoration: none;
         }
 
@@ -113,12 +104,9 @@
 
         .post-body {
             cursor: pointer;
-            max-height: 5em; /* Ensures post text fits nicely */
             overflow: hidden;
+            max-height: 3em;
             transition: max-height 0.3s ease-in-out;
-            margin-top: 8px;
-            line-height: 1.5;
-            font-size: 14px;
         }
 
         .post-body.collapsed {
@@ -126,10 +114,9 @@
         }
 
         .error-message {
-            color: var(--primary-red);
+            color: var(--primary-red);  /* Accessible red for error messages */
             font-weight: bold;
             text-align: center;
-            margin-top: 16px;
         }
 
         .tab-content {
@@ -138,7 +125,7 @@
             overflow-y: auto;
             position: absolute;
             width: 100%;
-            padding-top: 16px;
+            padding-top: 20px;
         }
 
         .tab-content.active {
@@ -149,12 +136,7 @@
             max-width: 100%;
             height: auto;
             border-radius: 8px;
-            margin-top: 8px;
-        }
-
-        /* Ensuring the layout doesn't have too much padding */
-        .tabs, .tab-content {
-            padding: 0 8px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -243,4 +225,64 @@
                         errorMessage = "Reddit server error. Please try again later.";
                     }
                     document.getElementById("reddit-feed").innerHTML = "";
-                    document.getElementById("reddit
+                    document.getElementById("reddit-error").style.display = "block";
+                    document.getElementById("reddit-error").textContent = `Error loading Reddit posts: ${errorMessage}`;
+                });
+        }
+
+        function fetchTumblrPosts() {
+            const blogName = 'shelbeezz';
+            fetch(`https://api.tumblr.com/v2/blog/${blogName}.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Tumblr API Error: ${response.status} ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const posts = data.response.posts.map(post => {
+                        let images = "";
+                        if (post.photos) {
+                            images = post.photos.map(photo => `
+                                <img src="${photo.alt_sizes[0].url}" alt="Image from Tumblr post">
+                            `).join("");
+                        }
+
+                        return `
+                            <div class="post">
+                                <h3>${post.summary}</h3>
+                                ${images}
+                                <p>${post.body || "No content available"}</p>
+                            </div>
+                        `;
+                    }).join("");
+
+                    document.getElementById("tumblr-feed").innerHTML = posts;
+                    document.getElementById("tumblr-error").style.display = "none";
+                })
+                .catch(error => {
+                    let errorMessage = "Unknown error occurred while fetching Tumblr posts.";
+                    if (error.message.includes("404")) {
+                        errorMessage = `Tumblr blog "${blogName}" not found. Please check the blog name.`;
+                    } else if (error.message.includes("403")) {
+                        errorMessage = "Tumblr API access forbidden. Please check your API permissions.";
+                    } else if (error.message.includes("500")) {
+                        errorMessage = "Tumblr server error. Please try again later.";
+                    }
+                    document.getElementById("tumblr-feed").innerHTML = "";
+                    document.getElementById("tumblr-error").style.display = "block";
+                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts for blog "${blogName}": ${errorMessage}`;
+                });
+        }
+
+        function togglePost(element) {
+            element.classList.toggle("collapsed");
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchRedditPosts();
+            fetchTumblrPosts();
+        });
+    </script>
+</body>
+</html>
