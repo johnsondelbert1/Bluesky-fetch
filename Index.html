@@ -178,7 +178,8 @@
         }
 
         function fetchTumblrPosts() {
-            fetch("https://api.tumblr.com/v2/blog/shelbeezz.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN")
+            const blogName = 'shelbeezz';
+            fetch(`https://api.tumblr.com/v2/blog/${blogName}.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Tumblr API Error: ${response.status} ${response.statusText}`);
@@ -198,7 +199,7 @@
                 .catch(error => {
                     let errorMessage = "Unknown error occurred while fetching Tumblr posts.";
                     if (error.message.includes("404")) {
-                        errorMessage = "Tumblr blog not found. Please check the blog name.";
+                        errorMessage = `Tumblr blog "${blogName}" not found. Please check the blog name.`;
                     } else if (error.message.includes("403")) {
                         errorMessage = "Tumblr API access forbidden. Please check your API permissions.";
                     } else if (error.message.includes("500")) {
@@ -206,7 +207,7 @@
                     }
                     document.getElementById("tumblr-feed").innerHTML = "";
                     document.getElementById("tumblr-error").style.display = "block";
-                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts: ${errorMessage}`;
+                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts for blog "${blogName}": ${errorMessage}`;
                 });
         }
 
