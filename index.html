@@ -53,20 +53,22 @@
             transition: background 0.3s, color 0.3s;
             height: 100vh;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .container {
             max-width: 800px;
-            width: 90%;
+            width: 100%;
             margin-top: 20px;
             height: 100%;
             overflow: hidden;
             position: relative;
+            padding: 0 10px;
         }
 
         h1 {
             text-align: center;
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin: 16px 0;
             color: var(--primary-red);  /* Accessible red used in the header */
         }
@@ -86,7 +88,7 @@
             color: var(--text-color);
             border-bottom: 3px solid transparent;
             transition: all 0.3s;
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-align: center;
         }
 
@@ -158,6 +160,60 @@
             height: auto;
             border-radius: 8px;
             margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tab {
+                padding: 12px 24px;
+                font-size: 1.2rem;
+                width: 100%;
+                text-align: center;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .post {
+                padding: 15px;
+            }
+
+            .tab-content {
+                padding-top: 10px;
+            }
+
+            .post-body {
+                max-height: none;
+            }
+
+            .error-message {
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            .tab {
+                font-size: 1.1rem;
+                padding: 8px 16px;
+            }
+
+            .post {
+                padding: 12px;
+                margin: 12px 0;
+            }
         }
     </style>
 </head>
@@ -260,54 +316,3 @@
             fetch(`https://api.tumblr.com/v2/blog/${blogName}.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN`)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error(`Tumblr API Error: ${response.status} ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const posts = data.response.posts.map(post => {
-                        let images = "";
-                        if (post.photos) {
-                            images = post.photos.map(photo => `
-                                <img src="${photo.alt_sizes[0].url}" alt="Image from Tumblr post">
-                            `).join("");
-                        }
-
-                        return `
-                            <div class="post">
-                                <h3>${post.summary}</h3>
-                                ${images}
-                                <p>${post.body || "No content available"}</p>
-                            </div>
-                        `;
-                    }).join("");
-
-                    document.getElementById("tumblr-feed").innerHTML = posts;
-                    document.getElementById("tumblr-error").style.display = "none";
-                })
-                .catch(error => {
-                    let errorMessage = "Unknown error occurred while fetching Tumblr posts.";
-                    if (error.message.includes("404")) {
-                        errorMessage = `Tumblr blog "${blogName}" not found. Please check the blog name.`;
-                    } else if (error.message.includes("403")) {
-                        errorMessage = "Tumblr API access forbidden. Please check your API permissions.";
-                    } else if (error.message.includes("500")) {
-                        errorMessage = "Tumblr server error. Please try again later.";
-                    }
-                    document.getElementById("tumblr-feed").innerHTML = "";
-                    document.getElementById("tumblr-error").style.display = "block";
-                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts for blog "${blogName}": ${errorMessage}`;
-                });
-        }
-
-        function togglePost(element) {
-            element.classList.toggle("collapsed");
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            fetchRedditPosts();
-            fetchTumblrPosts();
-        });
-    </script>
-</body>
-</html>
