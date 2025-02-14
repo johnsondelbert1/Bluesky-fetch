@@ -47,20 +47,24 @@
             transition: background 0.3s, color 0.3s;
             height: 100vh;
             flex-direction: column;
+            box-sizing: border-box;
         }
 
         .container {
+            width: 100%;
             max-width: 800px;
-            width: 90%;
             margin-top: 20px;
             height: 100%;
             overflow: hidden;
             position: relative;
+            padding: 0 16px; /* Add padding to ensure content doesn't touch edges */
+            box-sizing: border-box;
         }
 
         h1 {
             text-align: center;
             color: var(--primary-red);  /* Accessible red used in the header */
+            margin-bottom: 16px;
         }
 
         .tabs {
@@ -86,11 +90,12 @@
 
         .post {
             background: var(--card-bg);
-            padding: 20px;
+            padding: 16px;
             margin: 16px 0;
             border-radius: 10px;
             box-shadow: 0 4px 6px var(--shadow);
             border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
 
         .post h3 a {
