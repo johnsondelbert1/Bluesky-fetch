@@ -116,11 +116,6 @@
       display: block;
     }
 
-    /* Ensure the card content is scrollable */
-    .tab-content {
-      overflow-y: auto;
-    }
-
     /* Grid layout for multiple columns */
     .posts-container {
       display: grid;
@@ -279,23 +274,13 @@
 
       // Remove active class from all tabs
       allTabs.forEach(t => t.classList.remove('active'));
+      // Hide all content
+      allTabContents.forEach(c => c.classList.remove('active-tab'));
 
-      // Add active class to the selected tab
-      const activeTab = document.querySelector(`button[data-tab="${tab}"]`);
-      activeTab.classList.add('active');
-
-      // Hide all tab content with transition
-      allTabContents.forEach(t => {
-        t.classList.remove('active-tab');
-        t.style.opacity = '0'; // Hide with transition
-      });
-
-      // Show the selected tab content with transition
-      const selectedTab = document.getElementById(`${tab}-posts`);
-      selectedTab.classList.add('active-tab');
-      setTimeout(() => {
-        selectedTab.style.opacity = '1'; // Transition in
-      }, 10); // Delay to allow the class change to take effect
+      // Add active class to the clicked tab
+      document.querySelector(`[data-tab=${tab}]`).classList.add('active');
+      // Show the relevant content
+      document.querySelector(`#${tab}-posts`).classList.add('active-tab');
     }
 
     // Refresh posts
@@ -304,11 +289,10 @@
       fetchTumblrData();
     });
 
-    // Initial load
-    switchTab('reddit');
+    // Initial load of posts
     fetchRedditData();
     fetchTumblrData();
   </script>
 
 </body>
-</html>
+</html
