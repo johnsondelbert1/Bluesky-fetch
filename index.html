@@ -3,301 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#D32F2F"> <!-- Primary Red for mobile theme -->
     <title>Shelbee's Hub</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        /* Define light and dark theme variables */
-        :root {
-            --primary-color: #D32F2F; /* Red color */
-            --accent-color: #FF4081; /* Pink accent color */
-            --background-color-light: #FFFFFF;
-            --background-color-dark: #121212;
-            --surface-color-light: #F5F5F5;
-            --surface-color-dark: #1E1E1E;
-            --on-primary-color: #FFFFFF;
-            --on-surface-color-light: #212121;
-            --on-surface-color-dark: #E0E0E0;
-            --on-background-color-light: #212121;
-            --on-background-color-dark: #E0E0E0;
-            --tab-inactive-color-light: #9E9E9E;
-            --tab-inactive-color-dark: #B0B0B0;
-        }
 
-        /* Default (light) theme */
+    <style>
+        /* General Dark Theme Adjustments */
         body {
+            background-color: #121212; /* Dark background */
+            color: #E0E0E0; /* Light text color for readability */
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--background-color-light);
-            color: var(--on-background-color-light);
+        }
+
+        /* Tabs */
+        .tab-bar {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-            overflow: hidden;
+            justify-content: space-around;
+            background-color: #1E1E1E; /* Dark background for tabs */
+            color: #E0E0E0; /* Light text for tabs */
+            padding: 12px 0;
         }
 
-        h1 {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-top: 20px;
-            font-weight: 500;
-        }
-
-        /* Tab Styling */
-        .tabs {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            width: 100%;
-            box-sizing: border-box;
-            border-bottom: 2px solid var(--primary-color);
-            overflow: hidden;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 16px;
-            font-size: 1rem;
-            text-align: center;
-            background-color: transparent;
-            color: var(--tab-inactive-color-light);
+        .tab-bar .tab {
+            padding: 8px 16px;
             cursor: pointer;
-            transition: color 0.3s, transform 0.3s;
-            font-weight: 500;
         }
 
-        .tab.active {
-            color: var(--primary-color);
-            transform: scale(1.1);
+        .tab-bar .tab.active {
+            background-color: #D32F2F; /* Primary red accent color for active tab */
+            color: white; /* White text on active tab */
+        }
+
+        .tab-bar .tab:hover {
+            background-color: #FF4081; /* Accent color on hover */
         }
 
         /* Tab Content */
         .tab-content {
-            display: none;
-            width: 100%;
-            margin-top: 20px;
-            padding: 0 16px;
-            box-sizing: border-box;
-            max-height: 70vh;
-            overflow-y: auto;
-            background-color: var(--surface-color-light);
-            color: var(--on-surface-color-light);
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Card Styling */
-        .card {
-            background-color: var(--background-color-light);
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 16px;
             padding: 16px;
-            transition: transform 0.3s;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            background-color: #1E1E1E; /* Dark background for content area */
+            color: #E0E0E0; /* Light text color */
+            border-radius: 8px;
+            overflow-y: auto;
+            max-height: 80vh; /* Ensures scrollable content */
+        }
+
+        /* Cards */
+        .card {
+            background-color: #2C2C2C; /* Slightly lighter dark background for cards */
+            color: #E0E0E0; /* Light text for cards */
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+            padding: 16px;
         }
 
         .card:hover {
-            transform: scale(1.03);
+            background-color: #383838; /* Slightly darker hover effect */
         }
 
-        .card-header {
+        /* Card Title */
+        .card .title {
+            color: #FF4081; /* Accent color for card title */
             font-size: 1.25rem;
-            color: var(--primary-color);
-            font-weight: 500;
-            margin-bottom: 8px;
+            font-weight: 600;
         }
 
-        .card-body {
-            font-size: 1rem;
-            color: var(--on-surface-color-light);
-            line-height: 1.6;
+        /* Links */
+        a {
+            color: #FF4081; /* Accent color for links */
+            text-decoration: none;
         }
 
-        .card img {
-            border-radius: 8px;
-            margin-top: 10px;
-            max-width: 100%;
-            overflow: hidden;
+        a:hover {
+            text-decoration: underline;
         }
 
-        .button {
-            padding: 12px 24px;
-            background-color: var(--primary-color);
-            color: var(--on-primary-color);
+        /* Button Styles */
+        button {
+            background-color: #D32F2F; /* Primary red accent color for buttons */
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
             border: none;
-            border-radius: 50px;
             cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.3s;
-            margin-top: 20px;
         }
 
-        .button:hover {
-            background-color: var(--accent-color);
+        button:hover {
+            background-color: #FF4081; /* Accent color on button hover */
         }
 
-        .error {
-            color: var(--error-color);
-            font-size: 1.2rem;
-            text-align: center;
-            margin-top: 20px;
+        /* Accessibility Considerations for Dark Mode */
+        h1, h2, h3, h4, h5, h6 {
+            color: #FFEB3B; /* Yellow for headings for more contrast */
         }
 
-        /* Dark theme styles */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: var(--background-color-dark);
-                color: var(--on-background-color-dark);
-            }
+        p {
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+        }
 
-            .tabs {
-                border-bottom: 2px solid var(--primary-color);
-            }
+        input, select, textarea {
+            background-color: #2C2C2C; /* Dark background for inputs */
+            color: #E0E0E0; /* Light text inside input fields */
+            border: 1px solid #555;
+            padding: 8px;
+            border-radius: 4px;
+        }
 
-            .tab {
-                color: var(--tab-inactive-color-dark);
-            }
+        input:focus, select:focus, textarea:focus {
+            border-color: #FF4081; /* Accent color on focus */
+            outline: none;
+        }
 
-            .tab.active {
-                color: var(--primary-color);
-            }
+        /* Adjustments for Links in the Posts */
+        .post-body a {
+            color: #FF4081; /* Accent color for links in posts */
+        }
 
-            .tab-content {
-                background-color: var(--surface-color-dark);
-                color: var(--on-surface-color-dark);
-            }
+        .post-body a:hover {
+            color: #D32F2F; /* Darker red on hover */
+        }
 
-            .card {
-                background-color: var(--background-color-dark);
-                color: var(--on-surface-color-dark);
-            }
-
-            .card:hover {
-                transform: scale(1.03);
-            }
-
-            .error {
-                color: var(--error-color);
-            }
+        /* Make sure the content area is scrollable */
+        .tab-content {
+            max-height: 500px;
+            overflow-y: auto;
         }
     </style>
 </head>
 <body>
-    <h1>Shelbee's Hub</h1>
-    
-    <div class="tabs">
-        <div class="tab active" id="reddit-tab" onclick="switchTab('reddit')">Reddit</div>
-        <div class="tab" id="tumblr-tab" onclick="switchTab('tumblr')">Tumblr</div>
+
+    <!-- Header with Site Title -->
+    <header>
+        <h1>Shelbee's Hub</h1>
+    </header>
+
+    <!-- Tabs Section -->
+    <div class="tab-bar">
+        <div class="tab active" id="reddit-tab">Reddit</div>
+        <div class="tab" id="tumblr-tab">Tumblr</div>
     </div>
 
-    <div class="tab-content active" id="reddit">
-        <div id="reddit-feed"></div>
-        <div id="reddit-error" class="error" style="display: none;"></div>
+    <!-- Tab Content Section -->
+    <div id="content">
+        <div class="tab-content" id="reddit-content">
+            <!-- Reddit posts will appear here -->
+        </div>
+        <div class="tab-content" id="tumblr-content" style="display:none;">
+            <!-- Tumblr posts will appear here -->
+        </div>
     </div>
-
-    <div class="tab-content" id="tumblr">
-        <div id="tumblr-feed"></div>
-        <div id="tumblr-error" class="error" style="display: none;"></div>
-    </div>
-
-    <button class="button" onclick="refreshData()">Refresh Data</button>
 
     <script>
-        function switchTab(tab) {
-            document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
-            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        // Switch between tabs when clicked
+        document.getElementById('reddit-tab').addEventListener('click', function() {
+            document.getElementById('reddit-content').style.display = 'block';
+            document.getElementById('tumblr-content').style.display = 'none';
+            document.getElementById('reddit-tab').classList.add('active');
+            document.getElementById('tumblr-tab').classList.remove('active');
+        });
 
-            document.getElementById(tab).classList.add("active");
-            document.getElementById(tab + "-tab").classList.add("active");
-        }
-
-        function fetchRedditPosts() {
-            fetch("https://www.reddit.com/user/johnsondelbert1/submitted.json")
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Reddit API Error: ${response.status} ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const posts = data.data.children.map(post => `
-                        <div class="card">
-                            <div class="card-header"><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></div>
-                            <div class="card-body">${post.data.selftext || "No content available"}</div>
-                        </div>
-                    `).join("");
-                    document.getElementById("reddit-feed").innerHTML = posts;
-                    document.getElementById("reddit-error").style.display = "none";
-                })
-                .catch(error => {
-                    console.error("Reddit fetch error:", error);
-                    document.getElementById("reddit-feed").innerHTML = "";
-                    document.getElementById("reddit-error").style.display = "block";
-                    document.getElementById("reddit-error").textContent = `Error loading Reddit posts: ${error.message}`;
-                });
-        }
-
-        function fetchTumblrPosts() {
-            const blogName = 'shelbeezz';
-            fetch(`https://api.tumblr.com/v2/blog/${blogName}.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Tumblr API Error: ${response.status} ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const posts = data.response.posts.map(post => {
-                        let images = "";
-                        if (post.photos) {
-                            images = post.photos.map(photo => `
-                                <img src="${photo.alt_sizes[0].url}" alt="Image from Tumblr post">
-                            `).join("");
-                        }
-
-                        return `
-                            <div class="card">
-                                <div class="card-header">${post.summary}</div>
-                                ${images}
-                                <div class="card-body">${post.body || "No content available"}</div>
-                            </div>
-                        `;
-                    }).join("");
-
-                    document.getElementById("tumblr-feed").innerHTML = posts;
-                    document.getElementById("tumblr-error").style.display = "none";
-                })
-                .catch(error => {
-                    console.error("Tumblr fetch error:", error);
-                    let errorMessage = "Unknown error occurred while fetching Tumblr posts.";
-                    if (error.message.includes("404")) {
-                        errorMessage = `Tumblr blog "${blogName}" not found. Please check the blog name.`;
-                    } else if (error.message.includes("403")) {
-                        errorMessage = "Tumblr API access forbidden. Please check your API permissions.";
-                    }
-                    document.getElementById("tumblr-feed").innerHTML = "";
-                    document.getElementById("tumblr-error").style.display = "block";
-                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts: ${errorMessage}`;
-                });
-        }
-
-        function refreshData() {
-            fetchRedditPosts();
-            fetchTumblrPosts();
-        }
-
-        // Initial fetch
-        fetchRedditPosts();
-        fetchTumblrPosts();
+        document.getElementById('tumblr-tab').addEventListener('click', function() {
+            document.getElementById('tumblr-content').style.display = 'block';
+            document.getElementById('reddit-content').style.display = 'none';
+            document.getElementById('tumblr-tab').classList.add('active');
+            document.getElementById('reddit-tab').classList.remove('active');
+        });
     </script>
+
 </body>
 </html>
