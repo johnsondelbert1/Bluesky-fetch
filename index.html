@@ -67,13 +67,6 @@
       cursor: pointer;
     }
 
-    /* Scrollable container for posts */
-    .posts-container {
-      max-height: 70vh;
-      overflow-y: auto;
-      padding-bottom: 60px; /* to avoid overlap with footer */
-    }
-
     /* Tabs */
     .tabs {
       display: flex;
@@ -103,12 +96,16 @@
       color: var(--background-color);
     }
 
+    /* Tab content */
     .tab-content {
       display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
     }
 
     .active-tab {
       display: block;
+      opacity: 1;
     }
 
     /* Image styling for Reddit posts */
@@ -263,11 +260,18 @@
       const activeTab = document.querySelector(`button[data-tab="${tab}"]`);
       activeTab.classList.add('active');
 
-      // Hide all tab content
-      allTabContents.forEach(t => t.classList.remove('active-tab'));
+      // Hide all tab content with transition
+      allTabContents.forEach(t => {
+        t.classList.remove('active-tab');
+        t.style.opacity = '0'; // Hide with transition
+      });
 
-      // Show the selected tab content
-      document.getElementById(`${tab}-posts`).classList.add('active-tab');
+      // Show the selected tab content with transition
+      const selectedTab = document.getElementById(`${tab}-posts`);
+      selectedTab.classList.add('active-tab');
+      setTimeout(() => {
+        selectedTab.style.opacity = '1'; // Transition in
+      }, 10); // Delay to allow the class change to take effect
     }
 
     // Refresh posts
