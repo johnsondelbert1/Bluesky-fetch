@@ -7,32 +7,36 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Material Design M3 Colors */
+        /* Define light and dark theme variables */
         :root {
             --primary-color: #D32F2F; /* Red color */
             --accent-color: #FF4081; /* Pink accent color */
-            --background-color: #FFFFFF;
-            --surface-color: #F5F5F5;
+            --background-color-light: #FFFFFF;
+            --background-color-dark: #121212;
+            --surface-color-light: #F5F5F5;
+            --surface-color-dark: #1E1E1E;
             --on-primary-color: #FFFFFF;
-            --on-surface-color: #212121;
-            --on-background-color: #212121;
-            --error-color: #F44336;
-            --tab-inactive-color: #9E9E9E; /* Inactive tab color */
+            --on-surface-color-light: #212121;
+            --on-surface-color-dark: #E0E0E0;
+            --on-background-color-light: #212121;
+            --on-background-color-dark: #E0E0E0;
+            --tab-inactive-color-light: #9E9E9E;
+            --tab-inactive-color-dark: #B0B0B0;
         }
 
-        /* Global Styling */
+        /* Default (light) theme */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--surface-color);
-            color: var(--on-background-color);
+            background-color: var(--background-color-light);
+            color: var(--on-background-color-light);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             min-height: 100vh;
-            overflow: hidden; /* Prevent page overflow */
+            overflow: hidden;
         }
 
         h1 {
@@ -50,7 +54,7 @@
             width: 100%;
             box-sizing: border-box;
             border-bottom: 2px solid var(--primary-color);
-            overflow: hidden; /* Prevent overflow in tabs */
+            overflow: hidden;
             flex-wrap: wrap;
         }
 
@@ -60,7 +64,7 @@
             font-size: 1rem;
             text-align: center;
             background-color: transparent;
-            color: var(--tab-inactive-color);
+            color: var(--tab-inactive-color-light);
             cursor: pointer;
             transition: color 0.3s, transform 0.3s;
             font-weight: 500;
@@ -76,10 +80,12 @@
             display: none;
             width: 100%;
             margin-top: 20px;
-            padding: 0 16px; /* Adding padding inside the tab content */
+            padding: 0 16px;
             box-sizing: border-box;
-            max-height: 70vh; /* Limit the height of the tab content */
-            overflow-y: auto; /* Enable vertical scrolling when content overflows */
+            max-height: 70vh;
+            overflow-y: auto;
+            background-color: var(--surface-color-light);
+            color: var(--on-surface-color-light);
         }
 
         .tab-content.active {
@@ -88,7 +94,7 @@
 
         /* Card Styling */
         .card {
-            background-color: var(--background-color);
+            background-color: var(--background-color-light);
             border-radius: 12px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin-bottom: 16px;
@@ -96,7 +102,7 @@
             transition: transform 0.3s;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Prevent overflow in card content */
+            overflow: hidden;
         }
 
         .card:hover {
@@ -112,7 +118,7 @@
 
         .card-body {
             font-size: 1rem;
-            color: var(--on-surface-color);
+            color: var(--on-surface-color-light);
             line-height: 1.6;
         }
 
@@ -120,7 +126,7 @@
             border-radius: 8px;
             margin-top: 10px;
             max-width: 100%;
-            overflow: hidden; /* Ensure images are within the card's boundaries */
+            overflow: hidden;
         }
 
         .button {
@@ -146,25 +152,41 @@
             margin-top: 20px;
         }
 
-        /* Responsive Styling */
-        @media (max-width: 768px) {
+        /* Dark theme styles */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--background-color-dark);
+                color: var(--on-background-color-dark);
+            }
+
             .tabs {
-                flex-direction: column;
-                margin-top: 20px;
+                border-bottom: 2px solid var(--primary-color);
             }
 
             .tab {
-                padding: 14px;
-                font-size: 1rem;
-                text-align: center;
+                color: var(--tab-inactive-color-dark);
+            }
+
+            .tab.active {
+                color: var(--primary-color);
             }
 
             .tab-content {
-                padding: 15px;
+                background-color: var(--surface-color-dark);
+                color: var(--on-surface-color-dark);
             }
 
             .card {
-                padding: 12px;
+                background-color: var(--background-color-dark);
+                color: var(--on-surface-color-dark);
+            }
+
+            .card:hover {
+                transform: scale(1.03);
+            }
+
+            .error {
+                color: var(--error-color);
             }
         }
     </style>
