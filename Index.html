@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reddit Aggregator - JohnsonDelbert1</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root {
             --primary-color: #1e88e5;
@@ -57,15 +58,10 @@
             color: #e0e0e0;
             font-weight: bold;
             transition: color 0.3s ease-in-out;
+            cursor: pointer;
         }
 
-        .post h3 a {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-
-        .post h3 a:hover {
+        .post h3:hover {
             color: #ffffff;
         }
 
@@ -73,6 +69,35 @@
             font-size: 0.95em;
             color: #bdbdbd;
             line-height: 1.4;
+        }
+
+        .full-text {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .short-text {
+            display: block;
+        }
+
+        /* FAB style for Show Less button */
+        .fab {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border-radius: 50%;
+            padding: 15px;
+            font-size: 24px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .fab:hover {
+            background-color: #1565c0;
         }
     </style>
 </head>
@@ -91,11 +116,51 @@
                 feed.innerHTML = '';  
 
                 data.data.children.forEach(post => {
-                    feed.innerHTML += `<div class="post">
-                        <h3><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></h3>
-                        <p>${post.data.selftext.substring(0, 100)}...</p>
+                    let fullText = post.data.selftext;
+                    let shortText = fullText.length > 150 ? fullText.substring(0, 150) + "..." : fullText;
+
+                    let postHtml = `<div class="post">
+                        <h3>${post.data.title}</h3>
+                        <p class="short-text">${shortText}</p>
+                        <p class="full-text">${fullText}</p>
+                        <button class="fab material-icons" style="display: none;">arrow_upward</button>
                     </div>`;
+
+                    feed.innerHTML += postHtml;
                 });
+
+                document.querySelectorAll('.post h3').forEach(title => {
+                    title.addEventListener('click', function () {
+                        let post = this.parentElement;
+                        let fullText = post.querySelector('.full-text');
+                        let shortText = post.querySelector('.short-text');
+                        let fabButton = post.querySelector('.fab');
+
+                        if (fullText.style.display === 'none' || fullText.style.display === '') {
+                            fullText.style.display = 'block';
+                            shortText.style.display = 'none';
+                            fabButton.style.display = 'block'; // Show "Show Less" button
+                        } else {
+                            fullText.style.display = 'none';
+                            shortText.style.display = 'block';
+                            fabButton.style.display = 'none'; // Hide "Show Less" button
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.fab').forEach(fab => {
+                    fab.addEventListener('click', function () {
+                        let post = this.parentElement;
+                        let fullText = post.querySelector('.full-text');
+                        let shortText = post.querySelector('.short-text');
+                        let fabButton = post.querySelector('.fab');
+
+                        fullText.style.display = 'none';
+                        shortText.style.display = 'block';
+                        fabButton.style.display = 'none'; // Hide the FAB when collapsed
+                    });
+                });
+
             } catch (error) {
                 console.error('Error fetching Reddit data:', error);
                 document.getElementById('feed').innerHTML = '<p>Failed to load posts.</p>';
