@@ -11,71 +11,56 @@
     <!-- Google Font for Material Design -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        /* Default (Light Theme) Styling */
         :root {
-            --primary-color: #D32F2F; /* Red color */
-            --accent-color: #FF4081; /* Pink accent color */
+            --primary-color: #D32F2F;
+            --accent-color: #FF4081;
             --background-color: #FFFFFF;
             --surface-color: #F5F5F5;
             --on-primary-color: #FFFFFF;
             --on-surface-color: #212121;
-            --on-background-color: #212121;
             --error-color: #F44336;
-            --tab-inactive-color: #9E9E9E; /* Inactive tab color */
+            --tab-inactive-color: #9E9E9E;
         }
 
-        /* Dark Theme Styling */
         @media (prefers-color-scheme: dark) {
             :root {
-                --primary-color: #BB86FC; /* Light Purple */
-                --accent-color: #03DAC6; /* Light Teal */
+                --primary-color: #BB86FC;
+                --accent-color: #03DAC6;
                 --background-color: #121212;
                 --surface-color: #1E1E1E;
                 --on-primary-color: #000000;
                 --on-surface-color: #EAEAEA;
-                --on-background-color: #EAEAEA;
-                --error-color: #CF6679; /* Light Red */
-                --tab-inactive-color: #757575; /* Inactive tab color */
+                --error-color: #CF6679;
+                --tab-inactive-color: #757575;
             }
         }
 
-        /* Global Styling */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background-color: var(--background-color);
-            color: var(--on-background-color);
+            color: var(--on-surface-color);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
             min-height: 100vh;
-            overflow: hidden;
         }
 
-        /* Tab Styling */
         .tabs {
             display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
             width: 100%;
-            box-sizing: border-box;
             border-bottom: 2px solid var(--primary-color);
-            overflow: hidden;
-            flex-wrap: wrap;
         }
 
         .tab {
             flex: 1;
             padding: 16px;
-            font-size: 1rem;
             text-align: center;
-            background-color: transparent;
             color: var(--tab-inactive-color);
             cursor: pointer;
-            transition: color 0.3s, transform 0.3s;
             font-weight: 500;
+            transition: color 0.3s, transform 0.3s;
         }
 
         .tab.active {
@@ -83,13 +68,10 @@
             transform: scale(1.1);
         }
 
-        /* Tab Content */
         .tab-content {
             display: none;
             width: 100%;
-            margin-top: 20px;
-            padding: 0 16px;
-            box-sizing: border-box;
+            padding: 16px;
             max-height: 70vh;
             overflow-y: auto;
         }
@@ -98,7 +80,6 @@
             display: block;
         }
 
-        /* Card Styling */
         .card {
             background-color: var(--surface-color);
             border-radius: 12px;
@@ -106,8 +87,6 @@
             margin-bottom: 16px;
             padding: 16px;
             transition: transform 0.3s;
-            display: flex;
-            flex-direction: column;
         }
 
         .card:hover {
@@ -127,14 +106,6 @@
             line-height: 1.6;
         }
 
-        .card img {
-            border-radius: 8px;
-            margin-top: 10px;
-            max-width: 100%;
-            overflow: hidden;
-        }
-
-        /* Button Styling */
         .button {
             padding: 12px 24px;
             background-color: var(--primary-color);
@@ -151,34 +122,11 @@
             background-color: var(--accent-color);
         }
 
-        /* Error Styling */
         .error {
             color: var(--error-color);
             font-size: 1.2rem;
             text-align: center;
             margin-top: 20px;
-        }
-
-        /* Responsive Styling */
-        @media (max-width: 768px) {
-            .tabs {
-                flex-direction: column;
-                margin-top: 20px;
-            }
-
-            .tab {
-                padding: 14px;
-                font-size: 1rem;
-                text-align: center;
-            }
-
-            .tab-content {
-                padding: 15px;
-            }
-
-            .card {
-                padding: 12px;
-            }
         }
     </style>
 </head>
@@ -202,7 +150,6 @@
     </div>
 
     <script>
-        // Example Reddit and Tumblr API Calls
         const redditTab = document.getElementById("reddit-tab");
         const tumblrTab = document.getElementById("tumblr-tab");
         const redditContent = document.getElementById("reddit-content");
@@ -217,18 +164,16 @@
         const refreshRedditButton = document.getElementById("refresh-reddit");
         const refreshTumblrButton = document.getElementById("refresh-tumblr");
 
-        // Fetch Reddit posts
         async function fetchRedditPosts() {
             const lastFetched = localStorage.getItem('reddit-last-fetched');
             const currentTime = new Date().getTime();
             const oneDay = 24 * 60 * 60 * 1000;
 
             if (lastFetched && (currentTime - lastFetched) < oneDay) {
-                console.log('Using cached Reddit posts');
                 displayRedditPosts(JSON.parse(localStorage.getItem('reddit-posts')));
             } else {
                 try {
-                    const response = await fetch('https://www.reddit.com/r/johnsondelbert1/.json');
+                    const response = await fetch('https://www.reddit.com/user/johnsondelbert1/submitted.json');
                     const data = await response.json();
                     const posts = data.data.children;
                     localStorage.setItem('reddit-posts', JSON.stringify(posts));
@@ -241,9 +186,8 @@
             }
         }
 
-        // Display Reddit posts
         function displayRedditPosts(posts) {
-            redditPostsContainer.innerHTML = ''; // Clear previous content
+            redditPostsContainer.innerHTML = '';
             posts.forEach(post => {
                 const postElement = document.createElement('div');
                 postElement.classList.add('card');
@@ -257,54 +201,6 @@
             });
         }
 
-        // Fetch Tumblr posts
-        async function fetchTumblrPosts() {
-            const lastFetched = localStorage.getItem('tumblr-last-fetched');
-            const currentTime = new Date().getTime();
-            const oneDay = 24 * 60 * 60 * 1000;
-
-            if (lastFetched && (currentTime - lastFetched) < oneDay) {
-                console.log('Using cached Tumblr posts');
-                displayTumblrPosts(JSON.parse(localStorage.getItem('tumblr-posts')));
-            } else {
-                try {
-                    const response = await fetch('https://api.tumblr.com/v2/blog/shelbeezz.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN');
-                    const data = await response.json();
-                    const posts = data.response.posts;
-                    localStorage.setItem('tumblr-posts', JSON.stringify(posts));
-                    localStorage.setItem('tumblr-last-fetched', currentTime.toString());
-                    displayTumblrPosts(posts);
-                    tumblrError.style.display = 'none';
-                } catch (error) {
-                    tumblrError.textContent = 'Failed to load Tumblr posts: ' + error.message;
-                }
-            }
-        }
-
-        // Display Tumblr posts
-        function displayTumblrPosts(posts) {
-            tumblrPostsContainer.innerHTML = ''; // Clear previous content
-            posts.forEach(post => {
-                const postElement = document.createElement('div');
-                postElement.classList.add('card');
-                postElement.innerHTML = `
-                    <div class="card-header">
-                        <a href="${post.url}" target="_blank">${post.summary}</a>
-                    </div>
-                    <div class="card-body">${post.body}</div>
-                `;
-                if (post.photos) {
-                    post.photos.forEach(photo => {
-                        const imageElement = document.createElement('img');
-                        imageElement.src = photo.alt_sizes[0].url;
-                        postElement.appendChild(imageElement);
-                    });
-                }
-                tumblrPostsContainer.appendChild(postElement);
-            });
-        }
-
-        // Switch between tabs
         redditTab.addEventListener('click', () => {
             redditTab.classList.add('active');
             tumblrTab.classList.remove('active');
@@ -319,20 +215,12 @@
             redditContent.classList.remove('active');
         });
 
-        // Refresh button functionality
         refreshRedditButton.addEventListener('click', () => {
             localStorage.removeItem('reddit-posts');
             fetchRedditPosts();
         });
 
-        refreshTumblrButton.addEventListener('click', () => {
-            localStorage.removeItem('tumblr-posts');
-            fetchTumblrPosts();
-        });
-
-        // Initial fetch
         fetchRedditPosts();
-        fetchTumblrPosts();
     </script>
 </body>
 
