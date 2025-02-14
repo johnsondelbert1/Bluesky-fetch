@@ -57,12 +57,9 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 100%;
             width: 100%;
             margin-top: 20px;
-            height: 100%;
-            overflow: hidden;
-            position: relative;
             padding: 0 10px;
         }
 
@@ -104,6 +101,9 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px var(--shadow);
             border: 1px solid var(--border-color);
+            transition: transform 0.3s ease-in-out;
+            width: 100%;
+            max-width: 100%;
         }
 
         .post h3 a {
@@ -315,4 +315,4 @@
             const blogName = 'shelbeezz';
             fetch(`https://api.tumblr.com/v2/blog/${blogName}.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN`)
                 .then(response => {
-                    if (!response.ok) {
+                    if (!response.ok)
