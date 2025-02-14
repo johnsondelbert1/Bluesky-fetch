@@ -9,22 +9,32 @@
     <style>
         /* Material Design 3 Color Palette */
         :root {
-            --mdc-primary-color: #d32f2f; /* Red */
-            --mdc-accent-color: #f9a825; /* Amber */
-            --mdc-background-color: #fafafa; /* Light Gray */
-            --mdc-surface-color: #ffffff; /* White */
-            --mdc-on-primary-color: #ffffff; /* White */
-            --mdc-on-surface-color: #000000; /* Black */
-            --mdc-error-color: #d32f2f;
-            --mdc-on-error-color: #ffffff;
+            --mdc-primary-color-light: #d32f2f; /* Red */
+            --mdc-accent-color-light: #f9a825; /* Amber */
+            --mdc-background-color-light: #fafafa; /* Light Gray */
+            --mdc-surface-color-light: #ffffff; /* White */
+            --mdc-on-primary-color-light: #ffffff; /* White */
+            --mdc-on-surface-color-light: #000000; /* Black */
+            --mdc-error-color-light: #d32f2f;
+
+            /* Dark Mode Colors */
+            --mdc-primary-color-dark: #bb2124; /* Darker Red */
+            --mdc-accent-color-dark: #ffca28; /* Lighter Amber */
+            --mdc-background-color-dark: #121212; /* Dark Gray */
+            --mdc-surface-color-dark: #1e1e1e; /* Dark Surface */
+            --mdc-on-primary-color-dark: #ffffff; /* White */
+            --mdc-on-surface-color-dark: #e0e0e0; /* Light Gray */
+            --mdc-error-color-dark: #ff5c5c;
         }
 
+        /* Default to Light Theme */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--mdc-background-color);
-            color: var(--mdc-on-surface-color);
+            background-color: var(--mdc-background-color-light);
+            color: var(--mdc-on-surface-color-light);
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .container {
@@ -36,7 +46,13 @@
         h1 {
             font-size: 2.5rem;
             text-align: center;
-            color: var(--mdc-primary-color);
+            color: var(--mdc-primary-color-light);
+        }
+
+        /* Dark Theme Styles */
+        body.dark-theme {
+            background-color: var(--mdc-background-color-dark);
+            color: var(--mdc-on-surface-color-dark);
         }
 
         /* Tab Styling */
@@ -50,24 +66,38 @@
             padding: 16px;
             cursor: pointer;
             border-radius: 8px 8px 0 0;
-            background-color: var(--mdc-surface-color);
-            color: var(--mdc-on-surface-color);
+            background-color: var(--mdc-surface-color-light);
+            color: var(--mdc-on-surface-color-light);
             font-weight: 500;
             transition: background-color 0.3s ease;
         }
 
+        body.dark-theme .tab {
+            background-color: var(--mdc-surface-color-dark);
+            color: var(--mdc-on-surface-color-dark);
+        }
+
         .tab.active {
-            background-color: var(--mdc-primary-color);
-            color: var(--mdc-on-primary-color);
+            background-color: var(--mdc-primary-color-light);
+            color: var(--mdc-on-primary-color-light);
+        }
+
+        body.dark-theme .tab.active {
+            background-color: var(--mdc-primary-color-dark);
+            color: var(--mdc-on-primary-color-dark);
         }
 
         /* Content Section Styling */
         .tab-content {
             display: none;
             padding: 20px;
-            background-color: var(--mdc-surface-color);
+            background-color: var(--mdc-surface-color-light);
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-theme .tab-content {
+            background-color: var(--mdc-surface-color-dark);
         }
 
         .tab-content.active {
@@ -76,12 +106,18 @@
 
         /* Card Styling for Posts */
         .card {
-            background-color: var(--mdc-surface-color);
+            background-color: var(--mdc-surface-color-light);
             padding: 16px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.dark-theme .card {
+            background-color: var(--mdc-surface-color-dark);
         }
 
         .card:hover {
@@ -90,19 +126,40 @@
 
         .card h3 {
             font-size: 1.5rem;
-            color: var(--mdc-primary-color);
+            color: var(--mdc-primary-color-light);
             margin: 0;
         }
 
+        body.dark-theme .card h3 {
+            color: var(--mdc-primary-color-dark);
+        }
+
         .card p {
-            color: var(--mdc-on-surface-color);
+            color: var(--mdc-on-surface-color-light);
             margin-top: 10px;
+        }
+
+        body.dark-theme .card p {
+            color: var(--mdc-on-surface-color-dark);
+        }
+
+        /* Image Styling */
+        .card img {
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: cover; /* Makes the image fill the space while maintaining its aspect ratio */
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        body.dark-theme .card img {
+            border-radius: 8px;
         }
 
         /* Button Styling */
         .btn {
-            background-color: var(--mdc-accent-color);
-            color: var(--mdc-on-primary-color);
+            background-color: var(--mdc-accent-color-light);
+            color: var(--mdc-on-primary-color-light);
             padding: 10px 16px;
             font-size: 1rem;
             border-radius: 8px;
@@ -111,17 +168,48 @@
             border: none;
         }
 
+        body.dark-theme .btn {
+            background-color: var(--mdc-accent-color-dark);
+        }
+
         .btn:hover {
             background-color: #f57f17; /* Darker amber */
         }
 
+        body.dark-theme .btn:hover {
+            background-color: #ffb300; /* Lighter amber */
+        }
+
         /* Error Message Styling */
         .error {
-            color: var(--mdc-error-color);
+            color: var(--mdc-error-color-light);
             font-size: 1.2rem;
             font-weight: 500;
             text-align: center;
             margin-top: 20px;
+        }
+
+        body.dark-theme .error {
+            color: var(--mdc-error-color-dark);
+        }
+
+        /* Switch Theme Button */
+        .theme-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--mdc-primary-color-light);
+            color: var(--mdc-on-primary-color-light);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        body.dark-theme .theme-switch {
+            background-color: var(--mdc-primary-color-dark);
+            color: var(--mdc-on-primary-color-dark);
         }
 
         /* Responsive Design */
@@ -169,9 +257,13 @@
             <div id="tumblr-feed"></div>
             <div id="tumblr-error" class="error" style="display: none;"></div>
         </div>
+
+        <!-- Theme Switch Button -->
+        <div class="theme-switch" onclick="toggleTheme()">🌙</div>
     </div>
 
     <script>
+        // Switch between tabs
         function switchTab(tab) {
             // Hide all tab content
             document.querySelectorAll(".tab-content").forEach(content => {
@@ -184,79 +276,17 @@
             document.getElementById(tab + "-tab").classList.add("active");
         }
 
-        function fetchRedditPosts() {
-            fetch("https://www.reddit.com/user/johnsondelbert1/submitted.json")
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Reddit API Error: ${response.status} ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const posts = data.data.children.map(post => `
-                        <div class="card">
-                            <h3><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></h3>
-                            <p>${post.data.selftext || "No content available"}</p>
-                        </div>
-                    `).join("");
-                    document.getElementById("reddit-feed").innerHTML = posts;
-                    document.getElementById("reddit-error").style.display = "none";
-                })
-                .catch(error => {
-                    console.error("Reddit fetch error:", error);
-                    document.getElementById("reddit-feed").innerHTML = "";
-                    document.getElementById("reddit-error").style.display = "block";
-                    document.getElementById("reddit-error").textContent = `Error loading Reddit posts: ${error.message}`;
-                });
+        // Toggle between light and dark theme
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle("dark-theme");
+            const icon = body.classList.contains("dark-theme") ? "🌞" : "🌙";
+            document.querySelector(".theme-switch").textContent = icon;
+            localStorage.setItem("theme", body.classList.contains("dark-theme") ? "dark" : "light");
         }
 
-        function fetchTumblrPosts() {
-            const blogName = 'shelbeezz';
-            fetch(`https://api.tumblr.com/v2/blog/${blogName}.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Tumblr API Error: ${response.status} ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const posts = data.response.posts.map(post => {
-                        let images = "";
-                        if (post.photos) {
-                            images = post.photos.map(photo => `
-                                <img src="${photo.alt_sizes[0].url}" alt="Image from Tumblr post">
-                            `).join("");
-                        }
-
-                        return `
-                            <div class="card">
-                                <h3>${post.summary}</h3>
-                                ${images}
-                                <p>${post.body || "No content available"}</p>
-                            </div>
-                        `;
-                    }).join("");
-
-                    document.getElementById("tumblr-feed").innerHTML = posts;
-                    document.getElementById("tumblr-error").style.display = "none";
-                })
-                .catch(error => {
-                    console.error("Tumblr fetch error:", error);
-                    let errorMessage = "Unknown error occurred while fetching Tumblr posts.";
-                    if (error.message.includes("404")) {
-                        errorMessage = `Tumblr blog "${blogName}" not found. Please check the blog name.`;
-                    } else if (error.message.includes("403")) {
-                        errorMessage = "Tumblr API access forbidden. Please check your API permissions.";
-                    }
-                    document.getElementById("tumblr-feed").innerHTML = "";
-                    document.getElementById("tumblr-error").style.display = "block";
-                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts: ${errorMessage}`;
-                });
-        }
-
-        // Call the fetch functions to load posts on page load
-        fetchRedditPosts();
-        fetchTumblrPosts();
-    </script>
-</body>
-</html>
+        // Check system preference for color scheme and apply it
+        function applySystemTheme() {
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (systemPrefersDark) {
+                document.body.classList.add("dark-theme");
