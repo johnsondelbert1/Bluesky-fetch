@@ -47,6 +47,11 @@
             border-radius: 8px;
             overflow-y: auto;
             max-height: 80vh; /* Ensures scrollable content */
+            display: none; /* Initially hide all content */
+        }
+
+        .tab-content.active {
+            display: block; /* Show active content */
         }
 
         /* Cards */
@@ -148,10 +153,10 @@
 
     <!-- Tab Content Section -->
     <div id="content">
-        <div class="tab-content" id="reddit-content">
+        <div class="tab-content active" id="reddit-content">
             <!-- Reddit posts will appear here -->
         </div>
-        <div class="tab-content" id="tumblr-content" style="display:none;">
+        <div class="tab-content" id="tumblr-content">
             <!-- Tumblr posts will appear here -->
         </div>
     </div>
@@ -159,15 +164,15 @@
     <script>
         // Switch between tabs when clicked
         document.getElementById('reddit-tab').addEventListener('click', function() {
-            document.getElementById('reddit-content').style.display = 'block';
-            document.getElementById('tumblr-content').style.display = 'none';
+            document.getElementById('reddit-content').classList.add('active');
+            document.getElementById('tumblr-content').classList.remove('active');
             document.getElementById('reddit-tab').classList.add('active');
             document.getElementById('tumblr-tab').classList.remove('active');
         });
 
         document.getElementById('tumblr-tab').addEventListener('click', function() {
-            document.getElementById('tumblr-content').style.display = 'block';
-            document.getElementById('reddit-content').style.display = 'none';
+            document.getElementById('tumblr-content').classList.add('active');
+            document.getElementById('reddit-content').classList.remove('active');
             document.getElementById('tumblr-tab').classList.add('active');
             document.getElementById('reddit-tab').classList.remove('active');
         });
