@@ -106,6 +106,12 @@
         .post-body.collapsed {
             max-height: none;
         }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -117,9 +123,11 @@
         </div>
         <div id="reddit" class="tab-content active">
             <div id="reddit-feed">Loading Reddit posts...</div>
+            <div id="reddit-error" class="error-message" style="display: none;">Error loading Reddit posts.</div>
         </div>
         <div id="tumblr" class="tab-content">
             <div id="tumblr-feed">Loading Tumblr posts...</div>
+            <div id="tumblr-error" class="error-message" style="display: none;">Error loading Tumblr posts.</div>
         </div>
     </div>
 
@@ -152,13 +160,12 @@
                         </div>
                     `).join("");
                     document.getElementById("reddit-feed").innerHTML = posts;
+                    document.getElementById("reddit-error").style.display = "none";
                 })
                 .catch(error => {
-                    let errorMessage = `Error: ${error.message}`;
-                    if (error.message.includes("Reddit API Error")) {
-                        errorMessage = `Reddit posts failed to load. Please check the API key or network connection. ${error.message}`;
-                    }
-                    document.getElementById("reddit-feed").innerHTML = errorMessage;
+                    document.getElementById("reddit-feed").innerHTML = "";
+                    document.getElementById("reddit-error").style.display = "block";
+                    document.getElementById("reddit-error").textContent = `Error loading Reddit posts: ${error.message}`;
                 });
         }
 
@@ -178,13 +185,12 @@
                         </div>
                     `).join("");
                     document.getElementById("tumblr-feed").innerHTML = posts;
+                    document.getElementById("tumblr-error").style.display = "none";
                 })
                 .catch(error => {
-                    let errorMessage = `Error: ${error.message}`;
-                    if (error.message.includes("Tumblr API Error")) {
-                        errorMessage = `Tumblr posts failed to load. Please check the Tumblr API key or the blog name. ${error.message}`;
-                    }
-                    document.getElementById("tumblr-feed").innerHTML = errorMessage;
+                    document.getElementById("tumblr-feed").innerHTML = "";
+                    document.getElementById("tumblr-error").style.display = "block";
+                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts: ${error.message}`;
                 });
         }
 
