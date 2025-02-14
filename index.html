@@ -164,63 +164,54 @@
         const refreshRedditButton = document.getElementById("refresh-reddit");
         const refreshTumblrButton = document.getElementById("refresh-tumblr");
 
-        async function fetchRedditPosts() {
-            const lastFetched = localStorage.getItem('reddit-last-fetched');
+        async function fetchTumblrPosts() {
+            const lastFetched = localStorage.getItem('tumblr-last-fetched');
             const currentTime = new Date().getTime();
             const oneDay = 24 * 60 * 60 * 1000;
 
             if (lastFetched && (currentTime - lastFetched) < oneDay) {
-                displayRedditPosts(JSON.parse(localStorage.getItem('reddit-posts')));
+                displayTumblrPosts(JSON.parse(localStorage.getItem('tumblr-posts')));
             } else {
                 try {
-                    const response = await fetch('https://www.reddit.com/user/johnsondelbert1/submitted.json');
+                    const response = await fetch(`https://api.tumblr.com/v2/blog/shelbeezz.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN`, {
+                        headers: { "User-Agent": "ShelbeeHub (johnsondelbert1@gmail.com)" }
+                    });
                     const data = await response.json();
-                    const posts = data.data.children;
-                    localStorage.setItem('reddit-posts', JSON.stringify(posts));
-                    localStorage.setItem('reddit-last-fetched', currentTime.toString());
-                    displayRedditPosts(posts);
-                    redditError.style.display = 'none';
+
+                    if (!data.response || !data.response.posts) {
+                        throw new Error("Invalid API response");
+                    }
+
+                    const posts = data.response.posts;
+                    localStorage.setItem('tumblr-posts', JSON.stringify(posts));
+                    localStorage.setItem('tumblr-last-fetched', currentTime.toString());
+                    displayTumblrPosts(posts);
+                    tumblrError.style.display = 'none';
                 } catch (error) {
-                    redditError.textContent = 'Failed to load Reddit posts: ' + error.message;
+                    tumblrError.textContent = `Failed to load Tumblr posts for shelbeezz: ${error.message}`;
                 }
             }
         }
 
-        function displayRedditPosts(posts) {
-            redditPostsContainer.innerHTML = '';
+        function displayTumblrPosts(posts) {
+            tumblrPostsContainer.innerHTML = '';
             posts.forEach(post => {
                 const postElement = document.createElement('div');
                 postElement.classList.add('card');
                 postElement.innerHTML = `
-                    <div class="card-header">
-                        <a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a>
-                    </div>
-                    <div class="card-body">${post.data.selftext}</div>
+                    <div class="card-header">${post.summary || "Untitled Post"}</div>
+                    <div class="card-body">${post.body || "No content available"}</div>
                 `;
-                redditPostsContainer.appendChild(postElement);
+                tumblrPostsContainer.appendChild(postElement);
             });
         }
 
-        redditTab.addEventListener('click', () => {
-            redditTab.classList.add('active');
-            tumblrTab.classList.remove('active');
-            redditContent.classList.add('active');
-            tumblrContent.classList.remove('active');
+        refreshTumblrButton.addEventListener('click', () => {
+            localStorage.removeItem('tumblr-posts');
+            fetchTumblrPosts();
         });
 
-        tumblrTab.addEventListener('click', () => {
-            tumblrTab.classList.add('active');
-            redditTab.classList.remove('active');
-            tumblrContent.classList.add('active');
-            redditContent.classList.remove('active');
-        });
-
-        refreshRedditButton.addEventListener('click', () => {
-            localStorage.removeItem('reddit-posts');
-            fetchRedditPosts();
-        });
-
-        fetchRedditPosts();
+        fetchTumblrPosts();
     </script>
 </body>
 
