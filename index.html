@@ -51,9 +51,9 @@
 
         .card img {
             width: 100%;
-            height: auto;
+            height: 200px;
             border-radius: 4px;
-            object-fit: cover;
+            object-fit: cover; /* Ensures the image covers the container while maintaining aspect ratio */
         }
 
         .card-header {
@@ -247,6 +247,9 @@
                         post.photos.forEach(photo => {
                             const img = document.createElement('img');
                             img.src = photo.original_size.url;
+                            // Apply object-fit cover to make the image fill the card
+                            img.style.height = '200px'; 
+                            img.style.objectFit = 'cover';
                             body.appendChild(img);
                         });
                     } else {
