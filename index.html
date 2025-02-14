@@ -3,240 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1565c0">
     <title>Shelbee's Hub</title>
-
-    <!-- PWA Support -->
-    <link rel="manifest" href="manifest.json">
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js')
-                .then(() => console.log('Service Worker registered!'))
-                .catch(err => console.error('Service Worker registration failed:', err));
-        }
-    </script>
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #1565c0;  /* Accent blue color */
-            --primary-red: #D32F2F;     /* Accessible red color */
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-color: #ffffff;
-            --border-color: #333;
-            --shadow: rgba(0, 0, 0, 0.2);
-            --link-color: #1565c0;      /* Accent color for links */
-            --ripple-color: rgba(255, 255, 255, 0.2);
-        }
-
-        [data-theme="light"] {
-            --bg-color: #ffffff;
-            --card-bg: #f5f5f5;
-            --text-color: #000000;
-            --border-color: #ddd;
-            --shadow: rgba(0, 0, 0, 0.1);
-        }
-
         body {
             font-family: 'Roboto', sans-serif;
-            background: var(--bg-color);
-            color: var(--text-color);
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            transition: background 0.3s, color 0.3s;
-            height: 100vh;
-            flex-direction: column;
-        }
-
-        .container {
-            max-width: 800px;
-            width: 90%;
-            margin-top: 20px;
-            height: 100%;
-            overflow: hidden;
-            position: relative;
+            background-color: #f5f5f5;
+            color: #333;
         }
 
         h1 {
+            font-size: 2.5rem;
             text-align: center;
-            color: var(--primary-red);  /* Accessible red used in the header */
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 20px;
+            color: #d32f2f;
+            margin-top: 20px;
         }
 
         .tabs {
             display: flex;
-            justify-content: space-around;
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 20px;
-            box-shadow: 0px 2px 4px var(--shadow);
+            justify-content: center;
+            margin-top: 20px;
         }
 
         .tab {
             padding: 12px 20px;
             cursor: pointer;
-            font-weight: bold;
-            color: var(--text-color);
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-            position: relative;
+            background-color: #f0f0f0;
+            color: #333;
+            font-weight: 500;
+            border-radius: 4px 4px 0 0;
+            transition: background-color 0.3s ease;
         }
 
         .tab.active {
-            border-bottom: 3px solid var(--primary-color);  /* Accent color for active tab */
-            color: var(--primary-color);
-        }
-
-        .tab:hover {
-            background-color: rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-        }
-
-        .post {
-            background: var(--card-bg);
-            padding: 20px;
-            margin: 16px 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px var(--shadow);
-            border: 1px solid var(--border-color);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .post:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 12px var(--shadow);
-        }
-
-        .post h3 a {
-            color: var(--link-color);  /* Accent color for post links */
-            text-decoration: none;
-        }
-
-        .post h3 a:hover {
-            text-decoration: underline;
-        }
-
-        .post-body {
-            cursor: pointer;
-            overflow: hidden;
-            max-height: 3em;
-            transition: max-height 0.3s ease-in-out;
-        }
-
-        .post-body.collapsed {
-            max-height: none;
-        }
-
-        .error-message {
-            color: var(--primary-red);  /* Accessible red for error messages */
-            font-weight: bold;
-            text-align: center;
+            background-color: #d32f2f;
+            color: white;
         }
 
         .tab-content {
             display: none;
-            height: calc(100% - 60px); /* Space for header and tabs */
-            overflow-y: auto;
-            position: absolute;
-            width: 100%;
-            padding-top: 20px;
-            transition: transform 0.3s ease-in-out; /* Add transition here */
+            padding: 20px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
         }
 
         .tab-content.active {
             display: block;
-            transform: translateX(0);
         }
 
-        .tab-content.inactive {
-            transform: translateX(100%);
+        .post {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .post:hover {
+            transform: scale(1.02);
+        }
+
+        .post h3 {
+            font-size: 1.25rem;
+            color: #d32f2f;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .post-body {
+            font-size: 1rem;
+            color: #555;
+            margin-top: 10px;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .collapsed {
+            display: none;
         }
 
         .post img {
             max-width: 100%;
-            height: auto;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+
+        .error {
+            color: #d32f2f;
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* Material design card */
+        .card {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .card-content {
             margin-top: 10px;
         }
 
-        /* Ripple effect */
-        .tab:active {
-            animation: ripple 0.6s linear;
+        /* Material Design button */
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #d32f2f;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
         }
 
-        @keyframes ripple {
-            from {
-                transform: scale(1);
-                opacity: 1;
+        .button:hover {
+            background-color: #b71c1c;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+                align-items: center;
             }
-            to {
-                transform: scale(1.5);
-                opacity: 0;
+
+            .tab {
+                padding: 10px;
+                font-size: 1rem;
+                width: 100%;
+                text-align: center;
+            }
+
+            .tab-content {
+                padding: 15px;
+            }
+
+            .post {
+                padding: 15px;
             }
         }
+
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Shelbee's Hub</h1>
         <div class="tabs">
-            <div id="reddit-tab" class="tab active" onclick="switchTab('reddit')">Reddit</div>
-            <div id="tumblr-tab" class="tab" onclick="switchTab('tumblr')">Tumblr</div>
+            <div class="tab active" id="reddit-tab" onclick="switchTab('reddit')">Reddit</div>
+            <div class="tab" id="tumblr-tab" onclick="switchTab('tumblr')">Tumblr</div>
         </div>
-        <div id="reddit" class="tab-content active">
-            <div id="reddit-feed">Loading Reddit posts...</div>
-            <div id="reddit-error" class="error-message" style="display: none;">Error loading Reddit posts.</div>
+
+        <div class="tab-content active" id="reddit">
+            <div id="reddit-feed"></div>
+            <div id="reddit-error" class="error" style="display: none;"></div>
         </div>
-        <div id="tumblr" class="tab-content">
-            <div id="tumblr-feed">Loading Tumblr posts...</div>
-            <div id="tumblr-error" class="error-message" style="display: none;">Error loading Tumblr posts.</div>
+
+        <div class="tab-content" id="tumblr">
+            <div id="tumblr-feed"></div>
+            <div id="tumblr-error" class="error" style="display: none;"></div>
         </div>
     </div>
 
     <script>
-        let startX, startY, endX, endY;
-
         function switchTab(tab) {
-            // Remove active class from all tabs and content
             document.querySelectorAll(".tab-content").forEach(content => {
                 content.classList.remove("active");
-                content.classList.add("inactive");
             });
             document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
 
-            // Add active class to the selected tab and content
             document.getElementById(tab).classList.add("active");
-            document.getElementById(tab).classList.remove("inactive");
             document.getElementById(tab + "-tab").classList.add("active");
         }
-
-        // Detect swipe gestures
-        document.querySelector(".container").addEventListener("touchstart", function(e) {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        });
-
-        document.querySelector(".container").addEventListener("touchend", function(e) {
-            endX = e.changedTouches[0].clientX;
-            endY = e.changedTouches[0].clientY;
-
-            const deltaX = endX - startX;
-            const deltaY = endY - startY;
-
-            // If swipe is horizontal (left or right)
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                if (deltaX > 0) {
-                    // Swipe right: switch to Reddit tab
-                    switchTab('reddit');
-                } else {
-                    // Swipe left: switch to Tumblr tab
-                    switchTab('tumblr');
-                }
-            }
-        });
 
         function fetchRedditPosts() {
             fetch("https://www.reddit.com/user/johnsondelbert1/submitted.json")
@@ -248,28 +217,25 @@
                 })
                 .then(data => {
                     const posts = data.data.children.map(post => `
-                        <div class="post">
-                            <h3><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></h3>
-                            <p class="post-body collapsed" onclick="togglePost(this)">
-                                ${post.data.selftext || "No content available"}
-                            </p>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title"><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></h3>
+                            </div>
+                            <div class="card-content">
+                                <p class="post-body collapsed" onclick="togglePost(this)">
+                                    ${post.data.selftext || "No content available"}
+                                </p>
+                            </div>
                         </div>
                     `).join("");
                     document.getElementById("reddit-feed").innerHTML = posts;
                     document.getElementById("reddit-error").style.display = "none";
                 })
                 .catch(error => {
-                    let errorMessage = "Unknown error occurred while fetching Reddit posts.";
-                    if (error.message.includes("404")) {
-                        errorMessage = "Reddit user not found. Please check the username.";
-                    } else if (error.message.includes("403")) {
-                        errorMessage = "Reddit API access forbidden. Please check your API permissions.";
-                    } else if (error.message.includes("500")) {
-                        errorMessage = "Reddit server error. Please try again later.";
-                    }
+                    console.error("Reddit fetch error:", error);
                     document.getElementById("reddit-feed").innerHTML = "";
                     document.getElementById("reddit-error").style.display = "block";
-                    document.getElementById("reddit-error").textContent = `Error loading Reddit posts: ${errorMessage}`;
+                    document.getElementById("reddit-error").textContent = `Error loading Reddit posts: ${error.message}`;
                 });
         }
 
@@ -292,10 +258,14 @@
                         }
 
                         return `
-                            <div class="post">
-                                <h3>${post.summary}</h3>
-                                ${images}
-                                <p>${post.body || "No content available"}</p>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">${post.summary}</h3>
+                                </div>
+                                <div class="card-content">
+                                    ${images}
+                                    <p class="post-body">${post.body || "No content available"}</p>
+                                </div>
                             </div>
                         `;
                     }).join("");
@@ -304,9 +274,13 @@
                     document.getElementById("tumblr-error").style.display = "none";
                 })
                 .catch(error => {
+                    console.error("Tumblr fetch error:", error);
                     let errorMessage = "Unknown error occurred while fetching Tumblr posts.";
                     if (error.message.includes("404")) {
                         errorMessage = `Tumblr blog "${blogName}" not found. Please check the blog name.`;
                     } else if (error.message.includes("403")) {
                         errorMessage = "Tumblr API access forbidden. Please check your API permissions.";
                     }
+                    document.getElementById("tumblr-feed").innerHTML = "";
+                    document.getElementById("tumblr-error").style.display = "block";
+                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts
