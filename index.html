@@ -16,12 +16,6 @@
         }
     </script>
 
-    <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <!-- Material Design Typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --primary-color: #1565c0;  /* Accent blue color */
@@ -32,6 +26,7 @@
             --border-color: #333;
             --shadow: rgba(0, 0, 0, 0.2);
             --link-color: #1565c0;      /* Accent color for links */
+            --surface-color: #424242; /* Material surface color */
         }
 
         [data-theme="light"] {
@@ -40,6 +35,7 @@
             --text-color: #000000;
             --border-color: #ddd;
             --shadow: rgba(0, 0, 0, 0.1);
+            --surface-color: #fafafa;
         }
 
         body {
@@ -50,24 +46,24 @@
             padding: 0;
             display: flex;
             justify-content: center;
-            transition: background 0.3s, color 0.3s;
-            height: 100vh;
             flex-direction: column;
-            overflow: hidden;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
         }
 
         .container {
-            max-width: 100%;
             width: 100%;
+            max-width: 900px;
             margin-top: 20px;
-            padding: 0 10px;
+            padding: 20px;
+            flex-grow: 1;
         }
 
         h1 {
             text-align: center;
+            color: var(--primary-red);  /* Accessible red for header */
+            margin-bottom: 16px;
             font-size: 2rem;
-            margin: 16px 0;
-            color: var(--primary-red);  /* Accessible red used in the header */
         }
 
         .tabs {
@@ -75,23 +71,27 @@
             justify-content: space-around;
             border-bottom: 2px solid var(--border-color);
             margin-bottom: 20px;
-            padding: 10px 0;
         }
 
         .tab {
             padding: 10px 20px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
+            text-align: center;
             color: var(--text-color);
             border-bottom: 3px solid transparent;
             transition: all 0.3s;
-            font-size: 1rem;
-            text-align: center;
+            border-radius: 4px;
         }
 
         .tab.active {
             border-bottom: 3px solid var(--primary-color);  /* Accent color for active tab */
             color: var(--primary-color);
+            background-color: var(--surface-color);
+        }
+
+        .tab:hover {
+            background-color: var(--surface-color);
         }
 
         .post {
@@ -101,13 +101,10 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px var(--shadow);
             border: 1px solid var(--border-color);
-            transition: transform 0.3s ease-in-out;
-            width: 100%;
-            max-width: 100%;
         }
 
         .post h3 a {
-            color: var(--link-color);  /* Accent color for post links */
+            color: var(--link-color);
             text-decoration: none;
         }
 
@@ -130,15 +127,11 @@
             color: var(--primary-red);  /* Accessible red for error messages */
             font-weight: bold;
             text-align: center;
-            padding: 16px;
-            background-color: rgba(211, 47, 47, 0.1);
-            border-radius: 8px;
-            margin: 20px 0;
         }
 
         .tab-content {
             display: none;
-            height: calc(100% - 80px); /* Space for header and tabs */
+            height: calc(100% - 60px); /* Space for header and tabs */
             overflow-y: auto;
             position: absolute;
             width: 100%;
@@ -160,60 +153,6 @@
             height: auto;
             border-radius: 8px;
             margin-top: 10px;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            .tabs {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .tab {
-                padding: 12px 24px;
-                font-size: 1.2rem;
-                width: 100%;
-                text-align: center;
-            }
-
-            .container {
-                padding: 0 15px;
-            }
-
-            .post {
-                padding: 15px;
-            }
-
-            .tab-content {
-                padding-top: 10px;
-            }
-
-            .post-body {
-                max-height: none;
-            }
-
-            .error-message {
-                padding: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.25rem;
-            }
-
-            .tab {
-                font-size: 1.1rem;
-                padding: 8px 16px;
-            }
-
-            .post {
-                padding: 12px;
-                margin: 12px 0;
-            }
         }
     </style>
 </head>
@@ -315,4 +254,55 @@
             const blogName = 'shelbeezz';
             fetch(`https://api.tumblr.com/v2/blog/${blogName}.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN`)
                 .then(response => {
-                    if (!response.ok)
+                    if (!response.ok) {
+                        throw new Error(`Tumblr API Error: ${response.status} ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const posts = data.response.posts.map(post => {
+                        let images = "";
+                        if (post.photos) {
+                            images = post.photos.map(photo => `
+                                <img src="${photo.alt_sizes[0].url}" alt="Image from Tumblr post">
+                            `).join("");
+                        }
+
+                        return `
+                            <div class="post">
+                                <h3>${post.summary}</h3>
+                                ${images}
+                                <p>${post.body || "No content available"}</p>
+                            </div>
+                        `;
+                    }).join("");
+
+                    document.getElementById("tumblr-feed").innerHTML = posts;
+                    document.getElementById("tumblr-error").style.display = "none";
+                })
+                .catch(error => {
+                    let errorMessage = "Unknown error occurred while fetching Tumblr posts.";
+                    if (error.message.includes("404")) {
+                        errorMessage = `Tumblr blog "${blogName}" not found. Please check the blog name.`;
+                    } else if (error.message.includes("403")) {
+                        errorMessage = "Tumblr API access forbidden. Please check your API permissions.";
+                    } else if (error.message.includes("500")) {
+                        errorMessage = "Tumblr server error. Please try again later.";
+                    }
+                    document.getElementById("tumblr-feed").innerHTML = "";
+                    document.getElementById("tumblr-error").style.display = "block";
+                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts for blog "${blogName}": ${errorMessage}`;
+                });
+        }
+
+        function togglePost(element) {
+            element.classList.toggle("collapsed");
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchRedditPosts();
+            fetchTumblrPosts();
+        });
+    </script>
+</body>
+</html>
