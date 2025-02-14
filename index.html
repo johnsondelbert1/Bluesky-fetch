@@ -11,8 +11,8 @@
     <style>
         :root {
             color-scheme: light dark;
-            --primary-color: #b00020; /* Deep red */
-            --accent-color: #ff4081; /* Bright pink */
+            --primary-color: #b00020;
+            --accent-color: #ff4081;
             --background-color: #121212;
             --card-bg: #1e1e1e;
             --text-color: white;
@@ -22,6 +22,19 @@
             margin: 0;
             background: var(--background-color);
             color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-top: 60px; /* Account for sticky header */
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--background-color);
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         .tabs {
             display: flex;
@@ -42,6 +55,7 @@
             display: none;
             padding: 20px;
             animation: fadeIn 0.3s ease-in-out;
+            flex-grow: 1;
         }
         .tab-content.active {
             display: block;
@@ -79,27 +93,35 @@
             font-weight: bold;
             margin-top: 10px;
         }
+        footer {
+            text-align: center;
+            padding: 16px;
+            background: var(--background-color);
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1 style="text-align:center; color: var(--primary-color);">Shelbee's Hub</h1>
-    
-    <div class="tabs">
-        <div class="tab active" data-tab="reddit">Reddit</div>
-        <div class="tab" data-tab="tumblr">Tumblr</div>
-    </div>
+    <header>
+        <div class="tabs">
+            <div class="tab active" data-tab="reddit">Reddit</div>
+            <div class="tab" data-tab="tumblr">Tumblr</div>
+        </div>
+    </header>
 
     <div id="reddit" class="tab-content active">
-        <button onclick="fetchRedditPosts(true)">Refresh Reddit</button>
-        <div id="reddit-error" class="error"></div>
         <div id="reddit-posts"></div>
+        <div id="reddit-error" class="error"></div>
     </div>
 
     <div id="tumblr" class="tab-content">
-        <button onclick="fetchTumblrPosts(true)">Refresh Tumblr</button>
-        <div id="tumblr-error" class="error"></div>
         <div id="tumblr-posts"></div>
+        <div id="tumblr-error" class="error"></div>
     </div>
+
+    <footer>
+        <button onclick="refreshPosts()">Refresh Content</button>
+    </footer>
 
     <script>
         document.querySelectorAll(".tab").forEach(tab => {
@@ -185,6 +207,11 @@
                                  <div class="post-body">${post.body || "No text available"}</div>`;
                 container.appendChild(div);
             });
+        }
+
+        function refreshPosts() {
+            fetchRedditPosts(true);
+            fetchTumblrPosts(true);
         }
 
         fetchRedditPosts();
