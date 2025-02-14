@@ -125,9 +125,11 @@
 
     <script>
         function switchTab(tab) {
+            // Remove active class from all tabs and tab contents
             document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
             document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
 
+            // Add active class to the selected tab and content
             document.getElementById(tab).classList.add("active");
             document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add("active");
         }
