@@ -126,10 +126,16 @@
             position: absolute;
             width: 100%;
             padding-top: 20px;
+            transition: transform 0.3s ease-in-out;
         }
 
         .tab-content.active {
             display: block;
+            transform: translateX(0);
+        }
+
+        .tab-content.inactive {
+            transform: translateX(100%);
         }
 
         .post img {
@@ -162,11 +168,15 @@
 
         function switchTab(tab) {
             // Remove active class from all tabs and content
-            document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
+            document.querySelectorAll(".tab-content").forEach(content => {
+                content.classList.remove("active");
+                content.classList.add("inactive");
+            });
             document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
 
             // Add active class to the selected tab and content
             document.getElementById(tab).classList.add("active");
+            document.getElementById(tab).classList.remove("inactive");
             document.getElementById(tab + "-tab").classList.add("active");
         }
 
