@@ -7,108 +7,124 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* Material Design 3 Color Palette */
+        :root {
+            --mdc-primary-color: #d32f2f; /* Red */
+            --mdc-accent-color: #f9a825; /* Amber */
+            --mdc-background-color: #fafafa; /* Light Gray */
+            --mdc-surface-color: #ffffff; /* White */
+            --mdc-on-primary-color: #ffffff; /* White */
+            --mdc-on-surface-color: #000000; /* Black */
+            --mdc-error-color: #d32f2f;
+            --mdc-on-error-color: #ffffff;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: var(--mdc-background-color);
+            color: var(--mdc-on-surface-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         h1 {
             font-size: 2.5rem;
             text-align: center;
-            color: #d32f2f;
-            margin-top: 20px;
+            color: var(--mdc-primary-color);
         }
 
+        /* Tab Styling */
         .tabs {
             display: flex;
-            justify-content: center;
-            margin-top: 20px;
+            justify-content: space-around;
+            margin-bottom: 16px;
         }
 
         .tab {
-            padding: 12px 20px;
+            padding: 16px;
             cursor: pointer;
-            background-color: #f0f0f0;
-            color: #333;
+            border-radius: 8px 8px 0 0;
+            background-color: var(--mdc-surface-color);
+            color: var(--mdc-on-surface-color);
             font-weight: 500;
-            border-radius: 4px 4px 0 0;
             transition: background-color 0.3s ease;
         }
 
         .tab.active {
-            background-color: #d32f2f;
-            color: white;
+            background-color: var(--mdc-primary-color);
+            color: var(--mdc-on-primary-color);
         }
 
+        /* Content Section Styling */
         .tab-content {
             display: none;
             padding: 20px;
-            background-color: white;
-            border-radius: 4px;
+            background-color: var(--mdc-surface-color);
+            border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-top: 10px;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .post {
-            background-color: white;
-            padding: 20px;
+        /* Card Styling for Posts */
+        .card {
+            background-color: var(--mdc-surface-color);
+            padding: 16px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-            transition: transform 0.3s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
         }
 
-        .post:hover {
+        .card:hover {
             transform: scale(1.02);
         }
 
-        .post h3 {
-            font-size: 1.25rem;
-            color: #d32f2f;
+        .card h3 {
+            font-size: 1.5rem;
+            color: var(--mdc-primary-color);
             margin: 0;
-            font-weight: 500;
         }
 
-        .post-body {
-            font-size: 1rem;
-            color: #555;
+        .card p {
+            color: var(--mdc-on-surface-color);
             margin-top: 10px;
-            line-height: 1.6;
-            overflow: hidden;
         }
 
-        .collapsed {
-            display: none;
+        /* Button Styling */
+        .btn {
+            background-color: var(--mdc-accent-color);
+            color: var(--mdc-on-primary-color);
+            padding: 10px 16px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
         }
 
-        .post img {
-            max-width: 100%;
-            border-radius: 4px;
-            margin-top: 15px;
+        .btn:hover {
+            background-color: #f57f17; /* Darker amber */
         }
 
+        /* Error Message Styling */
         .error {
-            color: #d32f2f;
+            color: var(--mdc-error-color);
             font-size: 1.2rem;
             font-weight: 500;
             text-align: center;
             margin-top: 20px;
         }
 
-        .error-message {
-            color: #d32f2f;
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-
-        /* Responsive design */
+        /* Responsive Design */
         @media (max-width: 768px) {
             .tabs {
                 flex-direction: column;
@@ -116,18 +132,18 @@
             }
 
             .tab {
-                padding: 10px;
+                padding: 12px;
                 font-size: 1rem;
                 width: 100%;
                 text-align: center;
             }
 
             .tab-content {
-                padding: 15px;
+                padding: 16px;
             }
 
-            .post {
-                padding: 15px;
+            .card {
+                padding: 14px;
             }
         }
 
@@ -136,16 +152,19 @@
 <body>
     <div class="container">
         <h1>Shelbee's Hub</h1>
+        <!-- Tabs Section -->
         <div class="tabs">
             <div class="tab active" id="reddit-tab" onclick="switchTab('reddit')">Reddit</div>
             <div class="tab" id="tumblr-tab" onclick="switchTab('tumblr')">Tumblr</div>
         </div>
 
+        <!-- Content for Reddit -->
         <div class="tab-content active" id="reddit">
             <div id="reddit-feed"></div>
             <div id="reddit-error" class="error" style="display: none;"></div>
         </div>
 
+        <!-- Content for Tumblr -->
         <div class="tab-content" id="tumblr">
             <div id="tumblr-feed"></div>
             <div id="tumblr-error" class="error" style="display: none;"></div>
@@ -154,11 +173,13 @@
 
     <script>
         function switchTab(tab) {
+            // Hide all tab content
             document.querySelectorAll(".tab-content").forEach(content => {
                 content.classList.remove("active");
             });
             document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
 
+            // Show selected tab content
             document.getElementById(tab).classList.add("active");
             document.getElementById(tab + "-tab").classList.add("active");
         }
@@ -173,11 +194,9 @@
                 })
                 .then(data => {
                     const posts = data.data.children.map(post => `
-                        <div class="post">
+                        <div class="card">
                             <h3><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></h3>
-                            <div class="post-body collapsed" onclick="togglePost(this)">
-                                ${post.data.selftext || "No content available"}
-                            </div>
+                            <p>${post.data.selftext || "No content available"}</p>
                         </div>
                     `).join("");
                     document.getElementById("reddit-feed").innerHTML = posts;
@@ -210,10 +229,10 @@
                         }
 
                         return `
-                            <div class="post">
+                            <div class="card">
                                 <h3>${post.summary}</h3>
                                 ${images}
-                                <p class="post-body">${post.body || "No content available"}</p>
+                                <p>${post.body || "No content available"}</p>
                             </div>
                         `;
                     }).join("");
