@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Aggregator</title>
     
-    <!-- Material Icons for FAB -->
+    <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <!-- Material Design 3 Tabs CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@material/tabs/dist/mdc.tabs.min.css">
     
     <style>
         /* 🌟 MATERIAL DESIGN 3 DYNAMIC COLORS */
@@ -120,10 +117,6 @@
             margin-top: 10px;
         }
 
-        .short-text {
-            display: block;
-        }
-
         .fab {
             position: absolute;
             bottom: 20px;
@@ -131,7 +124,7 @@
             background-color: var(--primary-color);
             color: #fff;
             border-radius: 50%;
-            padding: 15px;
+            padding: 10px;
             font-size: 24px;
             border: none;
             cursor: pointer;
@@ -204,7 +197,12 @@
         async function fetchTumblrPosts() {
             try {
                 const tumblrBlog = 'exampleblog.tumblr.com'; // Replace with your Tumblr blog
-                const res = await fetch(`https://api.tumblr.com/v2/blog/${tumblrBlog}/posts?api_key=YOUR_TUMBLR_API_KEY`);
+                const res = await fetch(`https://api.tumblr.com/v2/blog/${tumblrBlog}/posts?api_key=YOUR_TUMBLR_API_KEY`, {
+                    headers: {
+                        "User-Agent": "ShelbeeBot/1.0 (johnsondelbert1@gmail.com)"
+                    }
+                });
+
                 const data = await res.json();
                 const feed = document.getElementById('tumblr-feed');
                 feed.innerHTML = '';
