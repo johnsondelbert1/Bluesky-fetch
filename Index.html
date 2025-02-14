@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reddit Aggregator - JohnsonDelbert1</title>
     <style>
-        /* Material Design Dark Theme */
         :root {
             --primary-color: #1e88e5;
             --bg-color: #121212;
@@ -39,50 +38,41 @@
 
         .post {
             background: var(--card-bg);
-            padding: 16px;
-            margin: 12px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px var(--shadow);
+            padding: 20px;
+            margin: 16px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px var(--shadow);
             border: 1px solid var(--border-color);
-            transition: transform 0.2s ease-in-out;
+            transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
         }
 
         .post:hover {
             transform: scale(1.02);
+            box-shadow: 0 6px 10px var(--shadow);
         }
 
         .post h3 {
             margin: 0 0 10px;
             font-size: 1.2em;
-            color: var(--primary-color);
+            color: #e0e0e0;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .post h3 a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .post h3 a:hover {
+            color: #ffffff;
         }
 
         .post p {
-            font-size: 0.9em;
+            font-size: 0.95em;
             color: #bdbdbd;
-        }
-
-        .post a {
-            display: inline-block;
-            margin-top: 10px;
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .post a:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            .container {
-                width: 95%;
-            }
-
-            .post {
-                padding: 12px;
-            }
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -102,9 +92,8 @@
 
                 data.data.children.forEach(post => {
                     feed.innerHTML += `<div class="post">
-                        <h3>${post.data.title}</h3>
+                        <h3><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></h3>
                         <p>${post.data.selftext.substring(0, 100)}...</p>
-                        <a href="https://www.reddit.com${post.data.permalink}" target="_blank">Read more</a>
                     </div>`;
                 });
             } catch (error) {
