@@ -290,7 +290,57 @@
             } else {
                 applySystemTheme();
             }
+            loadRedditPosts();
+            loadTumblrPosts();
         };
+
+        // Fetch and display Reddit posts
+        function loadRedditPosts() {
+            fetch("https://www.reddit.com/user/johnsondelbert1.json")
+                .then(response => response.json())
+                .then(data => {
+                    const postsContainer = document.getElementById("reddit-feed");
+                    data.data.children.forEach(post => {
+                        const postElement = document.createElement("div");
+                        postElement.classList.add("card");
+                        postElement.innerHTML = `
+                            <h3><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></h3>
+                            <p>${post.data.selftext || "No description"}</p>
+                        `;
+                        postsContainer.appendChild(postElement);
+                    });
+                })
+                .catch(error => {
+                    const errorElement = document.getElementById("reddit-error");
+                    errorElement.textContent = "Failed to load Reddit posts. Please try again later.";
+                    errorElement.style.display = "block";
+                });
+        }
+
+        // Fetch and display Tumblr posts
+        function loadTumblrPosts() {
+            fetch("https://api.tumblr.com/v2/blog/shelbeezz.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN")
+                .then(response => response.json())
+                .then(data => {
+                    const postsContainer = document.getElementById("tumblr-feed");
+                    data.response.posts.forEach(post => {
+                        const postElement = document.createElement("div");
+                        postElement.classList.add("card");
+                        let postContent = post.body || post.caption;
+                        postContent = postContent.replace(/<[^>]*>/g, ''); // Strip HTML tags
+                        postElement.innerHTML = `
+                            <h3><a href="${post.post_url}" target="_blank">${post.title || "No title"}</a></h3>
+                            <p>${postContent}</p>
+                        `;
+                        postsContainer.appendChild(postElement);
+                    });
+                })
+                .catch(error => {
+                    const errorElement = document.getElementById("tumblr-error");
+                    errorElement.textContent = "Failed to load Tumblr posts. Please try again later.";
+                    errorElement.style.display = "block";
+                });
+        }
     </script>
 </body>
 </html>
