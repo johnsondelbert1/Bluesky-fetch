@@ -14,6 +14,17 @@
             padding: 0;
         }
 
+        .header {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #6200ea;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
         .tabs {
             display: flex;
             justify-content: space-around;
@@ -104,25 +115,14 @@
             background-color: #ffffff;
             color: black;
         }
-
-        .header {
-            background-color: #6200ea;
-            padding: 20px;
-            text-align: center;
-            color: white;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
     </style>
 </head>
 <body class="dark-mode">
     <div class="header">
         <h1>Shelbee's Hub</h1>
+        <button id="theme-toggle">Toggle Theme</button>
     </div>
-
+    
     <div class="tabs">
         <button class="tab-button active" data-tab="reddit">Reddit Posts</button>
         <button class="tab-button" data-tab="tumblr">Tumblr Posts</button>
@@ -195,7 +195,7 @@
             }
 
             try {
-                const response = await fetch(tumblrApiUrl, { headers: { 'User-Agent': 'shelbeebot' } });
+                const response = await fetch(tumblrApiUrl);
                 const data = await response.json();
                 if (data.response && data.response.posts) {
                     const posts = data.response.posts;
@@ -211,63 +211,69 @@
         }
 
         function displayPosts(platform, posts) {
-            const container = document.getElementById(`${platform}Posts`);
-            container.innerHTML = '';
-
+            const postContainer = platform === 'reddit' ? document.getElementById('redditPosts') : document.getElementById('tumblrPosts');
+            postContainer.innerHTML = '';
             posts.forEach(post => {
                 const card = document.createElement('div');
-                card.className = 'card';
-
+                card.classList.add('card');
                 if (platform === 'reddit') {
-                    const postTitle = document.createElement('div');
-                    postTitle.className = 'card-header';
-                    postTitle.innerHTML = `<a href="https://www.reddit.com${post.permalink}" target="_blank">${post.title}</a>`;
+                    const title = document.createElement('h3');
+                    title.classList.add('card-header');
+                    title.innerHTML = `<a href="${post.url}" target="_blank">${post.title}</a>`;
 
-                    const subreddit = document.createElement('div');
-                    subreddit.className = 'subreddit';
-                    subreddit.innerText = `Subreddit: ${post.subreddit}`;
+                    const subreddit = document.createElement('p');
+                    subreddit.classList.add('subreddit');
+                    subreddit.innerHTML = `Subreddit: /r/${post.subreddit}`;
 
-                    const postBody = document.createElement('div');
-                    postBody.className = 'card-body';
-                    postBody.innerText = post.selftext;
+                    const body = document.createElement('div');
+                    body.classList.add('card-body');
+                    body.innerHTML = post.selftext || "No description";
 
-                    card.appendChild(postTitle);
-                    card.appendChild(subreddit);
-                    card.appendChild(postBody);
-
-                    if (post.url && post.url.endsWith('.jpg')) {
-                        const image = document.createElement('img');
-                        image.src = post.url;
-                        card.appendChild(image);
+                    if (post.preview && post.preview.images && post.preview.images[0].source) {
+                        const img = document.createElement('img');
+                        img.src = post.preview.images[0].source.url;
+                        card.appendChild(img);
                     }
-                }
 
-                if (platform === 'tumblr') {
-                    const postTitle = document.createElement('div');
-                    postTitle.className = 'card-header';
-                    postTitle.innerHTML = `<a href="${post.post_url}" target="_blank">${post.summary || post.text}</a>`;
+                    card.appendChild(title);
+                    card.appendChild(subreddit);
+                    card.appendChild(body);
+                } else if (platform === 'tumblr') {
+                    const title = document.createElement('h3');
+                    title.classList.add('card-header');
+                    title.innerHTML = post.summary || "No title";
 
-                    const postBody = document.createElement('div');
-                    postBody.className = 'card-body';
-                    postBody.innerText = post.body || '';
-
-                    card.appendChild(postTitle);
-                    card.appendChild(postBody);
-
+                    const body = document.createElement('div');
+                    body.classList.add('card-body');
                     if (post.photos) {
                         post.photos.forEach(photo => {
-                            const image = document.createElement('img');
-                            image.src = photo.original_size.url;
-                            card.appendChild(image);
+                            const img = document.createElement('img');
+                            img.src = photo.original_size.url;
+                            body.appendChild(img);
                         });
+                    } else {
+                        body.innerHTML += post.body || "No description";
                     }
+
+                    card.appendChild(title);
+                    card.appendChild(body);
                 }
 
-                container.appendChild(card);
+                postContainer.appendChild(card);
             });
         }
 
-        // Fetch posts initially
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.getAttribute('data-tab');
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(tabName).classList.add('active');
+            });
+        });
+
+        // Initial data load
         fetchRedditPosts();
         fetchTumblrPosts();
     </script>
