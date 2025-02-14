@@ -4,141 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shelbee's Hub</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        /* Dark Theme and Material Design Styles */
         body {
             font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #fff;
             margin: 0;
             padding: 0;
-            background-color: #121212;
-            color: #e0e0e0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #6200ea;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .tabs {
             display: flex;
             justify-content: space-around;
-            background-color: #6200ea;
-            padding: 10px 0;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .tab {
-            flex: 1;
-            text-align: center;
-            color: white;
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .tab.active {
             background-color: #3700b3;
         }
 
-        .tab-content {
-            padding: 20px;
-            margin-top: 20px;
+        .tab-button {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            cursor: pointer;
+            color: white;
+            background: transparent;
+            border: none;
+            font-weight: bold;
+        }
+
+        .tab-button.active {
+            background-color: #6200ea;
         }
 
         .card {
             background-color: #333;
-            margin-bottom: 20px;
-            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
         }
 
         .card img {
             width: 100%;
-            height: 200px;
-            border-radius: 4px;
-            object-fit: cover; /* Ensures the image covers the container while maintaining aspect ratio */
+            height: auto;
+            border-radius: 8px;
         }
 
         .card-header {
             font-size: 1.2em;
-            margin-bottom: 10px;
-            color: #fff;
+            font-weight: bold;
         }
 
         .card-body {
-            font-size: 1em;
-            color: #ddd;
+            margin-top: 10px;
         }
 
         .subreddit {
-            font-size: 0.9em;
-            color: #b0b0b0;
-        }
-
-        .btn {
-            background-color: #6200ea;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 20px;
+            color: #bb86fc;
         }
 
         .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 10px;
             background-color: #6200ea;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
         }
 
-        .footer .btn {
-            background-color: #3700b3;
+        .footer button {
+            background-color: #03dac5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .footer button:hover {
+            background-color: #018786;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+
+        .light-mode {
+            background-color: #ffffff;
+            color: black;
         }
     </style>
 </head>
-<body>
-
+<body class="dark-mode">
+    <div class="header">
+        <h1>Shelbee's Hub</h1>
+        <button id="theme-toggle">Toggle Theme</button>
+    </div>
+    
     <div class="tabs">
-        <div class="tab active" id="redditTab">Reddit</div>
-        <div class="tab" id="tumblrTab">Tumblr</div>
+        <button class="tab-button active" data-tab="reddit">Reddit Posts</button>
+        <button class="tab-button" data-tab="tumblr">Tumblr Posts</button>
     </div>
 
-    <div class="tab-content" id="redditContent">
-        <h2>Reddit Posts</h2>
+    <div id="reddit" class="tab-content active">
         <div id="redditPosts"></div>
+        <div id="redditError" class="error"></div>
     </div>
 
-    <div class="tab-content" id="tumblrContent" style="display: none;">
-        <h2>Tumblr Posts</h2>
+    <div id="tumblr" class="tab-content">
         <div id="tumblrPosts"></div>
+        <div id="tumblrError" class="error"></div>
     </div>
 
     <div class="footer">
-        <button class="btn" id="refreshButton">Refresh Data</button>
+        <button id="refreshData">Refresh Data</button>
     </div>
 
     <script>
-        const tumblrApiKey = 'ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN';
         const redditUser = 'johnsondelbert1';
-        const tumblrBlog = 'shelbeezz';
-        
-        const redditTab = document.getElementById('redditTab');
-        const tumblrTab = document.getElementById('tumblrTab');
-        const redditContent = document.getElementById('redditContent');
-        const tumblrContent = document.getElementById('tumblrContent');
-        const refreshButton = document.getElementById('refreshButton');
-        
-        // Switch tabs
-        redditTab.addEventListener('click', () => {
-            redditTab.classList.add('active');
-            tumblrTab.classList.remove('active');
-            redditContent.style.display = 'block';
-            tumblrContent.style.display = 'none';
+        const tumblrUser = 'shelbeezz';
+        const redditApiUrl = `https://www.reddit.com/user/${redditUser}/submitted.json?limit=10`;
+        const tumblrApiUrl = `https://api.tumblr.com/v2/blog/${tumblrUser}.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN&limit=10`;
+
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode');
         });
 
-        tumblrTab.addEventListener('click', () => {
-            tumblrTab.classList.add('active');
-            redditTab.classList.remove('active');
-            tumblrContent.style.display = 'block';
-            redditContent.style.display = 'none';
+        document.getElementById('refreshData').addEventListener('click', () => {
+            fetchRedditPosts();
+            fetchTumblrPosts();
         });
 
         async function fetchRedditPosts() {
@@ -146,26 +163,24 @@
             const cacheTimestamp = localStorage.getItem('redditCacheTimestamp');
             const now = Date.now();
 
-            // If there is cached data and it is less than 24 hours old, use the cached data
             if (cachedData && now - cacheTimestamp < 24 * 60 * 60 * 1000) {
                 displayPosts('reddit', JSON.parse(cachedData));
                 return;
             }
 
-            const url = `https://www.reddit.com/user/${redditUser}/submitted.json`;
-
             try {
-                const response = await fetch(url);
+                const response = await fetch(redditApiUrl);
                 const data = await response.json();
-                const posts = data.data.children.map(post => post.data);
-
-                // Cache the posts and timestamp
-                localStorage.setItem('redditPosts', JSON.stringify(posts));
-                localStorage.setItem('redditCacheTimestamp', now.toString());
-
-                displayPosts('reddit', posts); // Display the posts in the UI
+                if (data.data && data.data.children) {
+                    const posts = data.data.children.map(post => post.data);
+                    localStorage.setItem('redditPosts', JSON.stringify(posts));
+                    localStorage.setItem('redditCacheTimestamp', now.toString());
+                    displayPosts('reddit', posts);
+                } else {
+                    document.getElementById('redditError').innerText = 'Error fetching Reddit posts: No posts found.';
+                }
             } catch (error) {
-                console.error('Error fetching Reddit posts:', error);
+                document.getElementById('redditError').innerText = `Error fetching Reddit posts: ${error}`;
             }
         }
 
@@ -174,43 +189,34 @@
             const cacheTimestamp = localStorage.getItem('tumblrCacheTimestamp');
             const now = Date.now();
 
-            // If there is cached data and it is less than 24 hours old, use the cached data
             if (cachedData && now - cacheTimestamp < 24 * 60 * 60 * 1000) {
                 displayPosts('tumblr', JSON.parse(cachedData));
                 return;
             }
 
-            const url = `https://api.tumblr.com/v2/blog/${tumblrBlog}.tumblr.com/posts?api_key=${tumblrApiKey}`;
-
             try {
-                const response = await fetch(url);
+                const response = await fetch(tumblrApiUrl);
                 const data = await response.json();
-
-                // Check if the request was successful
-                if (data.meta.status === 200) {
-                    // Cache the posts and timestamp
-                    localStorage.setItem('tumblrPosts', JSON.stringify(data.response.posts));
+                if (data.response && data.response.posts) {
+                    const posts = data.response.posts;
+                    localStorage.setItem('tumblrPosts', JSON.stringify(posts));
                     localStorage.setItem('tumblrCacheTimestamp', now.toString());
-
-                    displayPosts('tumblr', data.response.posts); // Display the posts in the UI
+                    displayPosts('tumblr', posts);
                 } else {
-                    console.error('Error fetching Tumblr posts:', data.meta);
+                    document.getElementById('tumblrError').innerText = 'Error fetching Tumblr posts: No posts found.';
                 }
             } catch (error) {
-                console.error('Error fetching Tumblr posts:', error);
+                document.getElementById('tumblrError').innerText = `Error fetching Tumblr posts: ${error}`;
             }
         }
 
         function displayPosts(platform, posts) {
-            let postContainer = platform === 'reddit' ? document.getElementById('redditPosts') : document.getElementById('tumblrPosts');
-            postContainer.innerHTML = ''; // Clear previous posts
-
+            const postContainer = platform === 'reddit' ? document.getElementById('redditPosts') : document.getElementById('tumblrPosts');
+            postContainer.innerHTML = '';
             posts.forEach(post => {
-                let card = document.createElement('div');
+                const card = document.createElement('div');
                 card.classList.add('card');
-
                 if (platform === 'reddit') {
-                    // Reddit Post
                     const title = document.createElement('h3');
                     title.classList.add('card-header');
                     title.innerHTML = `<a href="${post.url}" target="_blank">${post.title}</a>`;
@@ -223,7 +229,6 @@
                     body.classList.add('card-body');
                     body.innerHTML = post.selftext || "No description";
 
-                    // Check if the Reddit post has an image
                     if (post.preview && post.preview.images && post.preview.images[0].source) {
                         const img = document.createElement('img');
                         img.src = post.preview.images[0].source.url;
@@ -234,22 +239,16 @@
                     card.appendChild(subreddit);
                     card.appendChild(body);
                 } else if (platform === 'tumblr') {
-                    // Tumblr Post
                     const title = document.createElement('h3');
                     title.classList.add('card-header');
                     title.innerHTML = post.summary || "No title";
 
                     const body = document.createElement('div');
                     body.classList.add('card-body');
-
-                    // Check if it's a photo post
                     if (post.photos) {
                         post.photos.forEach(photo => {
                             const img = document.createElement('img');
                             img.src = photo.original_size.url;
-                            // Apply object-fit cover to make the image fill the card
-                            img.style.height = '200px'; 
-                            img.style.objectFit = 'cover';
                             body.appendChild(img);
                         });
                     } else {
@@ -264,13 +263,17 @@
             });
         }
 
-        // Refresh button event
-        refreshButton.addEventListener('click', () => {
-            fetchRedditPosts();
-            fetchTumblrPosts();
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.getAttribute('data-tab');
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(tabName).classList.add('active');
+            });
         });
 
-        // Initialize by fetching posts
+        // Initial data load
         fetchRedditPosts();
         fetchTumblrPosts();
     </script>
