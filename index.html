@@ -32,6 +32,7 @@
             align-items: center;
             justify-content: flex-start;
             min-height: 100vh;
+            overflow: hidden; /* Prevent page overflow */
         }
 
         h1 {
@@ -49,6 +50,7 @@
             width: 100%;
             box-sizing: border-box;
             border-bottom: 2px solid var(--primary-color);
+            overflow: hidden; /* Prevent overflow in tabs */
         }
 
         .tab {
@@ -74,6 +76,7 @@
             margin-top: 20px;
             padding: 0 16px; /* Adding padding inside the tab content */
             box-sizing: border-box;
+            overflow: hidden; /* Prevent overflow in content */
         }
 
         .tab-content.active {
@@ -90,6 +93,7 @@
             transition: transform 0.3s;
             display: flex;
             flex-direction: column;
+            overflow: hidden; /* Prevent overflow in card content */
         }
 
         .card:hover {
@@ -113,6 +117,7 @@
             border-radius: 8px;
             margin-top: 10px;
             max-width: 100%;
+            overflow: hidden; /* Ensure images are within the card's boundaries */
         }
 
         .button {
