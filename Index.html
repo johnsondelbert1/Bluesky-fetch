@@ -163,9 +163,17 @@
                     document.getElementById("reddit-error").style.display = "none";
                 })
                 .catch(error => {
+                    let errorMessage = "Unknown error occurred while fetching Reddit posts.";
+                    if (error.message.includes("404")) {
+                        errorMessage = "Reddit user not found. Please check the username.";
+                    } else if (error.message.includes("403")) {
+                        errorMessage = "Reddit API access forbidden. Please check your API permissions.";
+                    } else if (error.message.includes("500")) {
+                        errorMessage = "Reddit server error. Please try again later.";
+                    }
                     document.getElementById("reddit-feed").innerHTML = "";
                     document.getElementById("reddit-error").style.display = "block";
-                    document.getElementById("reddit-error").textContent = `Error loading Reddit posts: ${error.message}`;
+                    document.getElementById("reddit-error").textContent = `Error loading Reddit posts: ${errorMessage}`;
                 });
         }
 
@@ -188,9 +196,17 @@
                     document.getElementById("tumblr-error").style.display = "none";
                 })
                 .catch(error => {
+                    let errorMessage = "Unknown error occurred while fetching Tumblr posts.";
+                    if (error.message.includes("404")) {
+                        errorMessage = "Tumblr blog not found. Please check the blog name.";
+                    } else if (error.message.includes("403")) {
+                        errorMessage = "Tumblr API access forbidden. Please check your API permissions.";
+                    } else if (error.message.includes("500")) {
+                        errorMessage = "Tumblr server error. Please try again later.";
+                    }
                     document.getElementById("tumblr-feed").innerHTML = "";
                     document.getElementById("tumblr-error").style.display = "block";
-                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts: ${error.message}`;
+                    document.getElementById("tumblr-error").textContent = `Error loading Tumblr posts: ${errorMessage}`;
                 });
         }
 
