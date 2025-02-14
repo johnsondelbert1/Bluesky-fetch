@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <style>
-        /* 🌟 MATERIAL DESIGN 3 DYNAMIC COLORS */
+        /* Material Design 3 Dynamic Colors */
         :root {
             --primary-color: #1e88e5;
             --bg-color: #121212;
@@ -164,45 +164,12 @@
             document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
         }
 
-        async function fetchRedditPosts() {
-            try {
-                const res = await fetch('https://www.reddit.com/user/johnsondelbert1/submitted.json');
-                const data = await res.json();
-                const feed = document.getElementById('reddit-feed');
-                feed.innerHTML = '';
-
-                if (!data.data.children.length) {
-                    feed.innerHTML = '<p>No Reddit posts available.</p>';
-                    return;
-                }
-
-                data.data.children.forEach(post => {
-                    let fullText = post.data.selftext || "No text available.";
-                    let shortText = fullText.length > 150 ? fullText.substring(0, 150) + "..." : fullText;
-
-                    let postHtml = `<div class="post">
-                        <h3>${post.data.title}</h3>
-                        <p class="short-text">${shortText}</p>
-                        <p class="full-text">${fullText}</p>
-                        <button class="fab material-icons">expand_less</button>
-                    </div>`;
-
-                    feed.innerHTML += postHtml;
-                });
-            } catch (error) {
-                document.getElementById('reddit-feed').innerHTML = '<p>Failed to load Reddit posts.</p>';
-            }
-        }
-
         async function fetchTumblrPosts() {
             try {
-                const tumblrBlog = 'exampleblog.tumblr.com'; // Replace with your Tumblr blog
-                const res = await fetch(`https://api.tumblr.com/v2/blog/${tumblrBlog}/posts?api_key=YOUR_TUMBLR_API_KEY`, {
-                    headers: {
-                        "User-Agent": "ShelbeeBot/1.0 (johnsondelbert1@gmail.com)"
-                    }
-                });
-
+                const tumblrBlog = 'shelbeezz.tumblr.com'; // Updated Tumblr blog name
+                const apiKey = 'YOUR_TUMBLR_API_KEY'; // Replace with your Tumblr API key
+                const res = await fetch(`https://api.tumblr.com/v2/blog/${tumblrBlog}/posts?api_key=${apiKey}`);
+                
                 const data = await res.json();
                 const feed = document.getElementById('tumblr-feed');
                 feed.innerHTML = '';
@@ -230,7 +197,6 @@
             }
         }
 
-        fetchRedditPosts();
         fetchTumblrPosts();
     </script>
 </body>
