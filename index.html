@@ -76,6 +76,13 @@
         .post-body {
             margin-top: 10px;
         }
+        .post-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-top: 10px;
+        }
         button {
             background: var(--accent-color);
             color: white;
@@ -175,8 +182,13 @@
             posts.forEach(post => {
                 const postCard = document.createElement('div');
                 postCard.classList.add('card');
+                let images = '';
+                if (post.data.preview) {
+                    images = `<img class="post-image" src="${post.data.preview.images[0].source.url}" alt="${post.data.title}" />`;
+                }
                 postCard.innerHTML = `
                     <div class="post-title"><a href="https://reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></div>
+                    ${images}
                     <div class="post-body">${post.data.selftext}</div>
                 `;
                 redditContainer.appendChild(postCard);
@@ -189,8 +201,13 @@
             posts.forEach(post => {
                 const postCard = document.createElement('div');
                 postCard.classList.add('card');
+                let images = '';
+                if (post.photos && post.photos.length > 0) {
+                    images = `<img class="post-image" src="${post.photos[0].original_size.url}" alt="${post.title || 'Untitled'}" />`;
+                }
                 postCard.innerHTML = `
                     <div class="post-title">${post.title || 'Untitled'}</div>
+                    ${images}
                     <div class="post-body">${post.body}</div>
                 `;
                 tumblrContainer.appendChild(postCard);
