@@ -89,6 +89,11 @@
 
     .tab-content {
       margin-top: 20px;
+      display: none; /* Hide tabs initially */
+    }
+
+    .active-tab {
+      display: block; /* Show active tab */
     }
 
     /* Image styling for Reddit posts */
@@ -238,8 +243,8 @@
     // Switch between tabs
     function switchTab(tab) {
       const allTabs = document.querySelectorAll('.tab-content');
-      allTabs.forEach(t => t.style.display = 'none');
-      document.getElementById(`${tab}-posts`).style.display = 'block';
+      allTabs.forEach(t => t.classList.remove('active-tab'));
+      document.getElementById(`${tab}-posts`).classList.add('active-tab');
     }
 
     // Toggle theme
