@@ -50,6 +50,7 @@
       padding: 16px;
       font-size: 1rem;
       color: var(--text-color);
+      word-wrap: break-word;
     }
 
     /* Footer with button */
@@ -90,7 +91,7 @@
       margin-top: 20px;
     }
 
-    /* Image styling for Tumblr posts */
+    /* Image styling for Reddit posts */
     .card img {
       width: 100%;
       height: auto;
@@ -147,12 +148,14 @@
           const postTitle = post.data.title;
           const postUrl = post.data.url;
           const postSubreddit = post.data.subreddit;
+          const postBody = post.data.selftext;  // Content of the post
           const postImage = post.data.preview ? post.data.preview.images[0].source.url : null;
 
           let postContent = `
             <div class="card-header">${postTitle}</div>
             <div class="card-body">
               <p>Subreddit: ${postSubreddit}</p>
+              <p>${postBody}</p>
               <a href="${postUrl}" target="_blank">Read more</a>
             </div>
           `;
