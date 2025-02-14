@@ -45,6 +45,8 @@
             box-shadow: 0 4px 6px var(--shadow);
             border: 1px solid var(--border-color);
             transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+            position: relative;
+            padding-bottom: 40px; /* Space at the bottom to avoid FAB overlap */
         }
 
         .post:hover {
@@ -123,7 +125,7 @@
                         <h3>${post.data.title}</h3>
                         <p class="short-text">${shortText}</p>
                         <p class="full-text">${fullText}</p>
-                        <button class="fab material-icons" style="display: none;">arrow_upward</button>
+                        <button class="fab material-icons" style="display: none;">expand_less</button>
                     </div>`;
 
                     feed.innerHTML += postHtml;
