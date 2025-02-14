@@ -16,29 +16,6 @@
         }
     </script>
 
-    <!-- Install Button -->
-    <script>
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('install-btn').style.display = 'block';
-        });
-
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(choice => {
-                    if (choice.outcome === 'accepted') {
-                        console.log('App installed');
-                    }
-                    deferredPrompt = null;
-                    document.getElementById('install-btn').style.display = 'none';
-                });
-            }
-        }
-    </script>
-
     <style>
         :root {
             --primary-color: #b71c1c;
@@ -110,32 +87,28 @@
             border: 1px solid var(--border-color);
         }
 
-        .post h3 {
+        .post h3 a {
             color: var(--accent-color);
-            cursor: pointer;
+            text-decoration: none;
         }
 
-        .post p {
-            cursor: pointer;
+        .post h3 a:hover {
+            text-decoration: underline;
         }
 
-        #install-btn {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
+        .post-body {
             cursor: pointer;
+            overflow: hidden;
+            max-height: 3em;
+            transition: max-height 0.3s ease-in-out;
+        }
+
+        .post-body.collapsed {
+            max-height: none;
         }
     </style>
 </head>
 <body>
-    <button id="install-btn" onclick="installApp()">Install App</button>
-
     <div class="container">
         <h1>Social Aggregator</h1>
         <div class="tabs">
@@ -161,22 +134,40 @@
 
         function fetchRedditPosts() {
             fetch("https://www.reddit.com/user/johnsondelbert1/submitted.json")
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Reddit API Error: ${response.status} ${response.statusText}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     const posts = data.data.children.map(post => `
                         <div class="post">
-                            <h3>${post.data.title}</h3>
-                            <p>${post.data.selftext || "No content available"}</p>
+                            <h3><a href="https://www.reddit.com${post.data.permalink}" target="_blank">${post.data.title}</a></h3>
+                            <p class="post-body collapsed" onclick="togglePost(this)">
+                                ${post.data.selftext || "No content available"}
+                            </p>
                         </div>
                     `).join("");
                     document.getElementById("reddit-feed").innerHTML = posts;
                 })
-                .catch(error => document.getElementById("reddit-feed").innerHTML = `Error: ${error.message}`);
+                .catch(error => {
+                    let errorMessage = `Error: ${error.message}`;
+                    if (error.message.includes("Reddit API Error")) {
+                        errorMessage = `Reddit posts failed to load. Please check the API key or network connection. ${error.message}`;
+                    }
+                    document.getElementById("reddit-feed").innerHTML = errorMessage;
+                });
         }
 
         function fetchTumblrPosts() {
             fetch("https://api.tumblr.com/v2/blog/shelbeezz.tumblr.com/posts?api_key=ZGuu8GZuo6jmos0wHBgUG4zpfdzehIBSZvXECK3wU788LrjCcN")
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Tumblr API Error: ${response.status} ${response.statusText}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     const posts = data.response.posts.map(post => `
                         <div class="post">
@@ -186,7 +177,17 @@
                     `).join("");
                     document.getElementById("tumblr-feed").innerHTML = posts;
                 })
-                .catch(error => document.getElementById("tumblr-feed").innerHTML = `Error: ${error.message}`);
+                .catch(error => {
+                    let errorMessage = `Error: ${error.message}`;
+                    if (error.message.includes("Tumblr API Error")) {
+                        errorMessage = `Tumblr posts failed to load. Please check the Tumblr API key or the blog name. ${error.message}`;
+                    }
+                    document.getElementById("tumblr-feed").innerHTML = errorMessage;
+                });
+        }
+
+        function togglePost(element) {
+            element.classList.toggle("collapsed");
         }
 
         document.addEventListener("DOMContentLoaded", () => {
