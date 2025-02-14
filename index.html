@@ -87,13 +87,32 @@
       cursor: pointer;
     }
 
+    /* Tabs */
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      background-color: var(--primary-color);
+      color: var(--text-color);
+      border: none;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .tab:hover {
+      background-color: var(--accent-color);
+    }
+
     .tab-content {
-      margin-top: 20px;
-      display: none; /* Hide tabs initially */
+      display: none;
     }
 
     .active-tab {
-      display: block; /* Show active tab */
+      display: block;
     }
 
     /* Image styling for Reddit posts */
@@ -243,8 +262,8 @@
     // Switch between tabs
     function switchTab(tab) {
       const allTabs = document.querySelectorAll('.tab-content');
-      allTabs.forEach(t => t.classList.remove('active-tab'));
-      document.getElementById(`${tab}-posts`).classList.add('active-tab');
+      allTabs.forEach(t => t.classList.remove('active-tab'));  // Hide all tabs
+      document.getElementById(`${tab}-posts`).classList.add('active-tab');  // Show the clicked tab
     }
 
     // Toggle theme
