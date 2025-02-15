@@ -23,7 +23,7 @@
             color: var(--text-color);
             font-family: Arial, sans-serif;
             margin: 0;
-            padding-bottom: 80px; /* Prevent content from hiding behind the nav */
+            padding-bottom: 80px;
         }
 
         /* Navigation Bar */
@@ -60,7 +60,6 @@
             color: var(--indicator-color);
         }
 
-        /* Active tab indicator */
         .nav-item.active::after {
             content: "";
             position: absolute;
@@ -112,17 +111,11 @@
             max-height: 70vh;
             overflow-y: auto;
             padding-bottom: 60px;
+            display: none; /* Initially hidden */
         }
 
-        .tab-content {
-            display: none;
-            margin-top: 20px;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .tab-content.active {
-            display: grid;
+        .posts-container.active {
+            display: block; /* Show active tab */
         }
 
     </style>
@@ -131,8 +124,8 @@
 <body>
 
     <div class="container">
-        <div id="reddit-posts" class="tab-content posts-container active"></div>
-        <div id="tumblr-posts" class="tab-content posts-container"></div>
+        <div id="reddit-posts" class="posts-container active"></div>
+        <div id="tumblr-posts" class="posts-container"></div>
         <div class="error" id="reddit-error"></div>
         <div class="error" id="tumblr-error"></div>
     </div>
@@ -151,7 +144,7 @@
 
     <script>
         function switchTab(tab) {
-            const allTabs = document.querySelectorAll('.tab-content');
+            const allTabs = document.querySelectorAll('.posts-container');
             const allLinks = document.querySelectorAll('.nav-item');
 
             // Hide all content
@@ -166,6 +159,9 @@
             // Mark the selected tab as active
             document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
         }
+
+        // Ensure the first tab is visible on page load
+        document.getElementById('reddit-posts').classList.add('active');
     </script>
 
 </body>
