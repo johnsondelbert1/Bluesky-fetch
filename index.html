@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Shelbee's Hub</title>
-
   <style>
     /* Material Design Colors */
     :root {
@@ -58,16 +57,17 @@
       max-height: 70vh;
       overflow-y: auto;
       padding-bottom: 60px; /* to avoid overlap with footer */
-      display: block;
     }
 
     .tab-content {
+      display: none; /* Initially hide all tab content */
       margin-top: 20px;
-      display: none;
-      display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 20px;
-      visibility: visible; /* Ensure visibility */
+    }
+
+    .tab-content.active {
+      display: grid; /* Only show the active tab content */
     }
 
     /* Image styling for Reddit posts */
@@ -76,11 +76,6 @@
       height: auto;
       border-radius: 8px;
       display: block;
-    }
-
-    /* Ensure the card content is scrollable */
-    .tab-content {
-      overflow-y: auto;
     }
 
     /* Tab button styling */
@@ -142,8 +137,8 @@
       <button class="tab" data-tab="tumblr" onclick="switchTab('tumblr')">Tumblr</button>
     </div>
 
-    <div class="tab-content" id="reddit-posts" class="posts-container"></div>
-    <div class="tab-content" id="tumblr-posts" class="posts-container"></div>
+    <div id="reddit-posts" class="tab-content posts-container"></div>
+    <div id="tumblr-posts" class="tab-content posts-container"></div>
     <div class="error" id="reddit-error"></div>
     <div class="error" id="tumblr-error"></div>
   </div>
@@ -253,9 +248,9 @@
     function switchTab(tab) {
       const allTabs = document.querySelectorAll('.tab-content');
       const allButtons = document.querySelectorAll('.tab');
-      allTabs.forEach(t => t.style.display = 'none');
+      allTabs.forEach(t => t.classList.remove('active'));
       allButtons.forEach(btn => btn.classList.remove('active'));
-      document.getElementById(`${tab}-posts`).style.display = 'grid';
+      document.getElementById(`${tab}-posts`).classList.add('active');
       document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
     }
 
