@@ -67,33 +67,34 @@
       cursor: pointer;
     }
 
-    /* Tabs */
-    .tabs {
+    /* Segmented Button (M3 style) */
+    .segmented-buttons {
       display: flex;
-      margin-bottom: 20px;
       background-color: var(--primary-color);
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
     }
 
-    .tab {
+    .segmented-button {
       flex: 1;
       padding: 10px;
       background-color: var(--primary-color);
       color: var(--text-color);
       border: none;
-      cursor: pointer;
       text-align: center;
       font-weight: bold;
+      cursor: pointer;
+      border-radius: 12px;
     }
 
-    .tab:hover {
+    .segmented-button:hover {
       background-color: var(--accent-color);
     }
 
-    .tab.active {
+    .segmented-button.active {
       background-color: var(--accent-color);
       color: var(--background-color);
+      border-radius: 12px 12px 0 0;
     }
 
     /* Tab content */
@@ -141,10 +142,10 @@
 <body>
 
   <div class="container">
-    <!-- Tabs -->
-    <div class="tabs">
-      <button class="tab active" data-tab="reddit" onclick="switchTab('reddit')">Reddit</button>
-      <button class="tab" data-tab="tumblr" onclick="switchTab('tumblr')">Tumblr</button>
+    <!-- Segmented Buttons -->
+    <div class="segmented-buttons">
+      <button class="segmented-button active" data-tab="reddit" onclick="switchTab('reddit')">Reddit</button>
+      <button class="segmented-button" data-tab="tumblr" onclick="switchTab('tumblr')">Tumblr</button>
     </div>
 
     <!-- Post Content -->
@@ -269,17 +270,17 @@
 
     // Switch between tabs
     function switchTab(tab) {
-      const allTabs = document.querySelectorAll('.tab');
+      const allTabs = document.querySelectorAll('.segmented-button');
       const allTabContents = document.querySelectorAll('.tab-content');
 
       // Remove active class from all tabs
       allTabs.forEach(t => t.classList.remove('active'));
-      // Hide all content
-      allTabContents.forEach(c => c.classList.remove('active-tab'));
+      // Hide all tab content
+      allTabContents.forEach(t => t.classList.remove('active-tab'));
 
-      // Add active class to the clicked tab
-      document.querySelector(`[data-tab=${tab}]`).classList.add('active');
-      // Show the relevant content
+      // Add active class to clicked tab
+      document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+      // Show the selected tab content
       document.getElementById(`${tab}-tab`).classList.add('active-tab');
     }
 
@@ -289,7 +290,7 @@
       fetchTumblrData();
     });
 
-    // Initial load of posts
+    // Initial data load
     fetchRedditData();
     fetchTumblrData();
   </script>
