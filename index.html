@@ -22,6 +22,7 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
+      overflow-x: hidden;
     }
 
     /* Container for content */
@@ -51,20 +52,6 @@
       font-size: 1rem;
       color: var(--text-color);
       word-wrap: break-word;
-    }
-
-    /* Footer with button */
-    .footer {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 10px 20px;
-      background-color: var(--accent-color);
-      color: var(--text-color);
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
     }
 
     /* Segmented Button (M3 style) */
@@ -134,6 +121,28 @@
       .posts-container {
         grid-template-columns: repeat(3, 1fr);
       }
+    }
+
+    /* Footer with button */
+    .footer {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      background-color: var(--accent-color);
+      color: var(--text-color);
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .footer.visible {
+      opacity: 1;
+      visibility: visible;
     }
 
   </style>
@@ -270,30 +279,48 @@
 
     // Switch between tabs
     function switchTab(tab) {
-      const allTabs = document.querySelectorAll('.segmented-button');
-      const allTabContents = document.querySelectorAll('.tab-content');
+      const allTabs = document.querySelectorAll('.tab-content');
+      const allButtons = document.querySelectorAll('.segmented-button');
+      allTabs.forEach(t => t.classList.remove('active-tab'));
+      allButtons.forEach(btn => btn.classList.remove('active'));
 
-      // Remove active class from all tabs
-      allTabs.forEach(t => t.classList.remove('active'));
-      // Hide all tab content
-      allTabContents.forEach(t => t.classList.remove('active-tab'));
-
-      // Add active class to clicked tab
-      document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-      // Show the selected tab content
       document.getElementById(`${tab}-tab`).classList.add('active-tab');
+      document.querySelector(`.segmented-button[data-tab=${tab}]`).classList.add('active');
+
+      // Fetch data for the selected tab
+      if (tab === 'reddit') {
+        fetchRedditData();
+      } else if (tab === 'tumblr') {
+        fetchTumblrData();
+      }
     }
 
-    // Refresh posts
-    document.getElementById('refresh-button').addEventListener('click', () => {
-      fetchRedditData();
-      fetchTumblrData();
+    // Show refresh button on scroll
+    const refreshButton = document.getElementById('refresh-button');
+    window.addEventListener('scroll', function() {
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const documentHeight = document.documentElement.offsetHeight;
+
+      if (scrollPosition >= documentHeight) {
+        refreshButton.classList.add('visible');
+      } else {
+        refreshButton.classList.remove('visible');
+      }
     });
 
-    // Initial data load
+    // Refresh posts when button is clicked
+    refreshButton.addEventListener('click', function() {
+      const activeTab = document.querySelector('.segmented-button.active').getAttribute('data-tab');
+      if (activeTab === 'reddit') {
+        fetchRedditData();
+      } else if (activeTab === 'tumblr') {
+        fetchTumblrData();
+      }
+    });
+
+    // Initial fetch
     fetchRedditData();
     fetchTumblrData();
   </script>
-
 </body>
 </html>
