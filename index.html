@@ -77,6 +77,9 @@
     .tab-content {
       margin-top: 20px;
       display: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
     }
 
     /* Image styling for Reddit posts */
@@ -242,7 +245,7 @@
       const allButtons = document.querySelectorAll('.tab');
       allTabs.forEach(t => t.style.display = 'none');
       allButtons.forEach(btn => btn.classList.remove('active'));
-      document.getElementById(`${tab}-posts`).style.display = 'block';
+      document.getElementById(`${tab}-posts`).style.display = 'grid';
       document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
     }
 
