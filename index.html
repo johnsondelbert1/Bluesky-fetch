@@ -53,20 +53,6 @@
       word-wrap: break-word;
     }
 
-    /* Footer with button */
-    .footer {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 10px 20px;
-      background-color: var(--accent-color);
-      color: var(--text-color);
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
-    }
-
     /* Scrollable container for posts */
     .posts-container {
       max-height: 70vh;
@@ -121,6 +107,28 @@
       background-color: var(--primary-color);
     }
 
+    /* Footer with button */
+    .footer {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      background-color: var(--accent-color);
+      color: var(--text-color);
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .footer.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
   </style>
 </head>
 
@@ -132,8 +140,8 @@
       <button class="tab" data-tab="tumblr" onclick="switchTab('tumblr')">Tumblr</button>
     </div>
 
-    <div class="tab-content" id="reddit-posts"></div>
-    <div class="tab-content" id="tumblr-posts"></div>
+    <div class="tab-content" id="reddit-posts" class="posts-container"></div>
+    <div class="tab-content" id="tumblr-posts" class="posts-container"></div>
     <div class="error" id="reddit-error"></div>
     <div class="error" id="tumblr-error"></div>
   </div>
@@ -249,8 +257,20 @@
       document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
     }
 
+    // Show refresh button when scrolled to bottom
+    const refreshButton = document.getElementById('refresh-button');
+    const postsContainer = document.querySelector('.posts-container');
+
+    postsContainer.addEventListener('scroll', () => {
+      if (postsContainer.scrollTop + postsContainer.clientHeight >= postsContainer.scrollHeight) {
+        refreshButton.classList.add('show');
+      } else {
+        refreshButton.classList.remove('show');
+      }
+    });
+
     // Refresh posts
-    document.getElementById('refresh-button').addEventListener('click', () => {
+    refreshButton.addEventListener('click', () => {
       fetchRedditData();
       fetchTumblrData();
     });
