@@ -109,6 +109,8 @@
       display: grid;
       grid-template-columns: repeat(1, 1fr);
       gap: 20px;
+      max-height: 500px;
+      overflow-y: auto;
     }
 
     @media (min-width: 600px) {
@@ -295,8 +297,22 @@
       }
     }
 
-    // Show refresh button on scroll
+    // Show refresh button on scroll within Reddit content
+    const redditContainer = document.getElementById('reddit-posts');
     const refreshButton = document.getElementById('refresh-button');
+
+    redditContainer.addEventListener('scroll', function() {
+      const scrollPosition = redditContainer.scrollTop + redditContainer.clientHeight;
+      const contentHeight = redditContainer.scrollHeight;
+
+      if (scrollPosition >= contentHeight) {
+        refreshButton.classList.add('visible');
+      } else {
+        refreshButton.classList.remove('visible');
+      }
+    });
+
+    // Show refresh button on general scroll
     window.addEventListener('scroll', function() {
       const scrollPosition = window.innerHeight + window.scrollY;
       const documentHeight = document.documentElement.offsetHeight;
