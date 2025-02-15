@@ -78,30 +78,32 @@
       display: block;
     }
 
-    /* Tab button styling */
-    .tabs {
+    /* Navigation menu */
+    nav {
       display: flex;
+      justify-content: flex-start;
+      background-color: var(--primary-color);
+      padding: 12px;
+      border-radius: 8px;
       margin-bottom: 20px;
     }
 
-    .tab {
-      background-color: #333;
+    nav a {
       color: var(--text-color);
       padding: 10px 20px;
-      border: none;
-      cursor: pointer;
-      margin-right: 10px;
-      border-radius: 25px;
       font-weight: bold;
+      text-decoration: none;
+      border-radius: 25px;
       transition: background-color 0.3s ease;
+      margin-right: 10px;
     }
 
-    .tab:hover {
-      background-color: var(--primary-color);
+    nav a:hover {
+      background-color: var(--accent-color);
     }
 
-    .tab.active {
-      background-color: var(--primary-color);
+    nav a.active {
+      background-color: var(--accent-color);
     }
 
     /* Footer with button */
@@ -132,10 +134,10 @@
 <body>
 
   <div class="container">
-    <div class="tabs">
-      <button class="tab" data-tab="reddit" onclick="switchTab('reddit')">Reddit</button>
-      <button class="tab" data-tab="tumblr" onclick="switchTab('tumblr')">Tumblr</button>
-    </div>
+    <nav>
+      <a href="#" class="nav-link" data-tab="reddit" onclick="switchTab('reddit')">Reddit</a>
+      <a href="#" class="nav-link" data-tab="tumblr" onclick="switchTab('tumblr')">Tumblr</a>
+    </nav>
 
     <div id="reddit-posts" class="tab-content posts-container"></div>
     <div id="tumblr-posts" class="tab-content posts-container"></div>
@@ -247,9 +249,9 @@
     // Switch between tabs
     function switchTab(tab) {
       const allTabs = document.querySelectorAll('.tab-content');
-      const allButtons = document.querySelectorAll('.tab');
+      const allLinks = document.querySelectorAll('.nav-link');
       allTabs.forEach(t => t.classList.remove('active'));
-      allButtons.forEach(btn => btn.classList.remove('active'));
+      allLinks.forEach(link => link.classList.remove('active'));
       document.getElementById(`${tab}-posts`).classList.add('active');
       document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
     }
