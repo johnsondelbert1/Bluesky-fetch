@@ -74,21 +74,9 @@
       padding-bottom: 60px; /* to avoid overlap with footer */
     }
 
-    /* Light / Dark theme toggle */
-    .theme-toggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: var(--primary-color);
-      color: var(--text-color);
-      border: none;
-      border-radius: 50%;
-      padding: 10px;
-      cursor: pointer;
-    }
-
     .tab-content {
       margin-top: 20px;
+      display: none;
     }
 
     /* Image styling for Reddit posts */
@@ -103,12 +91,37 @@
     .tab-content {
       overflow-y: auto;
     }
+
+    /* Tab button styling */
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      background-color: #333;
+      color: var(--text-color);
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      margin-right: 10px;
+      border-radius: 25px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .tab:hover {
+      background-color: var(--primary-color);
+    }
+
+    .tab.active {
+      background-color: var(--primary-color);
+    }
+
   </style>
 </head>
 
 <body>
-
-  <button class="theme-toggle" id="theme-toggle">ðŸŒ™</button>
 
   <div class="container">
     <div class="tabs">
@@ -226,14 +239,12 @@
     // Switch between tabs
     function switchTab(tab) {
       const allTabs = document.querySelectorAll('.tab-content');
+      const allButtons = document.querySelectorAll('.tab');
       allTabs.forEach(t => t.style.display = 'none');
+      allButtons.forEach(btn => btn.classList.remove('active'));
       document.getElementById(`${tab}-posts`).style.display = 'block';
+      document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
     }
-
-    // Toggle theme
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-      document.body.classList.toggle('light');
-    });
 
     // Refresh posts
     document.getElementById('refresh-button').addEventListener('click', () => {
