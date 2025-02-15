@@ -22,7 +22,6 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      overflow-x: hidden;
     }
 
     /* Container for content */
@@ -54,77 +53,6 @@
       word-wrap: break-word;
     }
 
-    /* Segmented Button (M3 style) */
-    .segmented-buttons {
-      display: flex;
-      background-color: var(--primary-color);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .segmented-button {
-      flex: 1;
-      padding: 10px;
-      background-color: var(--primary-color);
-      color: var(--text-color);
-      border: none;
-      text-align: center;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 12px;
-    }
-
-    .segmented-button:hover {
-      background-color: var(--accent-color);
-    }
-
-    .segmented-button.active {
-      background-color: var(--accent-color);
-      color: var(--background-color);
-      border-radius: 12px 12px 0 0;
-    }
-
-    /* Tab content */
-    .tab-content {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-
-    .active-tab {
-      display: block;
-      opacity: 1;
-    }
-
-    /* Image styling for Reddit posts */
-    .card img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      display: block;
-    }
-
-    /* Grid layout for multiple columns */
-    .posts-container {
-      display: grid;
-      grid-template-columns: repeat(1, 1fr);
-      gap: 20px;
-      max-height: 500px;
-      overflow-y: auto;
-    }
-
-    @media (min-width: 600px) {
-      .posts-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (min-width: 900px) {
-      .posts-container {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
     /* Footer with button */
     .footer {
       position: fixed;
@@ -137,35 +65,59 @@
       border: none;
       border-radius: 25px;
       cursor: pointer;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
     }
 
-    .footer.visible {
-      opacity: 1;
-      visibility: visible;
+    /* Scrollable container for posts */
+    .posts-container {
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-bottom: 60px; /* to avoid overlap with footer */
     }
 
+    /* Light / Dark theme toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--primary-color);
+      color: var(--text-color);
+      border: none;
+      border-radius: 50%;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .tab-content {
+      margin-top: 20px;
+    }
+
+    /* Image styling for Reddit posts */
+    .card img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+    }
+
+    /* Ensure the card content is scrollable */
+    .tab-content {
+      overflow-y: auto;
+    }
   </style>
 </head>
 
 <body>
 
+  <button class="theme-toggle" id="theme-toggle">ðŸŒ™</button>
+
   <div class="container">
-    <!-- Segmented Buttons -->
-    <div class="segmented-buttons">
-      <button class="segmented-button active" data-tab="reddit" onclick="switchTab('reddit')">Reddit</button>
-      <button class="segmented-button" data-tab="tumblr" onclick="switchTab('tumblr')">Tumblr</button>
+    <div class="tabs">
+      <button class="tab" data-tab="reddit" onclick="switchTab('reddit')">Reddit</button>
+      <button class="tab" data-tab="tumblr" onclick="switchTab('tumblr')">Tumblr</button>
     </div>
 
-    <!-- Post Content -->
-    <div class="tab-content active-tab" id="reddit-tab">
-      <div class="posts-container" id="reddit-posts"></div>
-    </div>
-    <div class="tab-content" id="tumblr-tab">
-      <div class="posts-container" id="tumblr-posts"></div>
-    </div>
+    <div class="tab-content" id="reddit-posts"></div>
+    <div class="tab-content" id="tumblr-posts"></div>
     <div class="error" id="reddit-error"></div>
     <div class="error" id="tumblr-error"></div>
   </div>
@@ -188,10 +140,6 @@
         const posts = data.data.children;
 
         redditPosts.innerHTML = '';  // Clear previous posts
-
-        if (posts.length === 0) {
-          redditError.textContent = 'No posts found.';
-        }
 
         posts.forEach(post => {
           const card = document.createElement('div');
@@ -245,10 +193,6 @@
 
         tumblrPosts.innerHTML = '';  // Clear previous posts
 
-        if (posts.length === 0) {
-          tumblrError.textContent = 'No posts found.';
-        }
-
         posts.forEach(post => {
           const card = document.createElement('div');
           card.className = 'card';
@@ -282,61 +226,26 @@
     // Switch between tabs
     function switchTab(tab) {
       const allTabs = document.querySelectorAll('.tab-content');
-      const allButtons = document.querySelectorAll('.segmented-button');
-      allTabs.forEach(t => t.classList.remove('active-tab'));
-      allButtons.forEach(btn => btn.classList.remove('active'));
-
-      document.getElementById(`${tab}-tab`).classList.add('active-tab');
-      document.querySelector(`.segmented-button[data-tab=${tab}]`).classList.add('active');
-
-      // Fetch data for the selected tab
-      if (tab === 'reddit') {
-        fetchRedditData();
-      } else if (tab === 'tumblr') {
-        fetchTumblrData();
-      }
+      allTabs.forEach(t => t.style.display = 'none');
+      document.getElementById(`${tab}-posts`).style.display = 'block';
     }
 
-    // Show refresh button on scroll within Reddit content
-    const redditContainer = document.getElementById('reddit-posts');
-    const refreshButton = document.getElementById('refresh-button');
-
-    redditContainer.addEventListener('scroll', function() {
-      const scrollPosition = redditContainer.scrollTop + redditContainer.clientHeight;
-      const contentHeight = redditContainer.scrollHeight;
-
-      if (scrollPosition >= contentHeight) {
-        refreshButton.classList.add('visible');
-      } else {
-        refreshButton.classList.remove('visible');
-      }
+    // Toggle theme
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      document.body.classList.toggle('light');
     });
 
-    // Show refresh button on general scroll
-    window.addEventListener('scroll', function() {
-      const scrollPosition = window.innerHeight + window.scrollY;
-      const documentHeight = document.documentElement.offsetHeight;
-
-      if (scrollPosition >= documentHeight) {
-        refreshButton.classList.add('visible');
-      } else {
-        refreshButton.classList.remove('visible');
-      }
+    // Refresh posts
+    document.getElementById('refresh-button').addEventListener('click', () => {
+      fetchRedditData();
+      fetchTumblrData();
     });
 
-    // Refresh posts when button is clicked
-    refreshButton.addEventListener('click', function() {
-      const activeTab = document.querySelector('.segmented-button.active').getAttribute('data-tab');
-      if (activeTab === 'reddit') {
-        fetchRedditData();
-      } else if (activeTab === 'tumblr') {
-        fetchTumblrData();
-      }
-    });
-
-    // Initial fetch
+    // Initial load
+    switchTab('reddit');
     fetchRedditData();
     fetchTumblrData();
   </script>
+
 </body>
 </html>
